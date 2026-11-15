@@ -1,0 +1,585 @@
+// Beauty Empire — PostgreSQL schema (Prisma 7)
+// Money is stored as Decimal(10,2) in INR. Timestamps are stored in UTC (timestamptz)
+// and rendered in the salon timezone (SalonSettings.timezone, default Asia/Kolkata).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Enums ─────────────────────────────
+
+enum UserRole {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REJECTED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  UNPAID
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  PAY_AT_SALON
+  RAZORPAY
+}
+
+enum ServiceStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum GalleryCategory {
+  BRIDAL_MAKEUP
+  HAIRSTYLES
+  FACIAL_TREATMENTS
+  HAIR_TRANSFORMATIONS
+  NAIL_ART
+  SALON_INTERIORS
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  RESOLVED
+}
+
+enum NotificationType {
+  BOOKING_CREATED
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  BOOKING_RESCHEDULED
+  BOOKING_REJECTED
+  BOOKING_COMPLETED
+  RESCHEDULE_REQUESTED
+  PAYMENT_RECEIVED
+  REVIEW_SUBMITTED
+  CONTACT_MESSAGE
+  REMINDER
+}
+
+// ───────────────────── Auth (Better Auth models) ─────────────────────
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole  @default(CUSTOMER)
+  phone         String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions        Session[]
+  accounts        Account[]
+  customerProfile CustomerProfile?
+  staffProfile    StaffProfile?
+  notifications   Notification[]
+  auditLogs       AuditLog[]
+
+  @@index([role])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model RateLimit {
+  id          String @id
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@map("rate_limit")
+}
+
+// ───────────────────────────── Profiles ─────────────────────────────
+
+model CustomerProfile {
+  id                 String    @id @default(cuid())
+  userId             String    @unique
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateOfBirth        DateTime? @db.Date
+  preferredStaffId   String?
+  preferredStaff     StaffProfile? @relation("PreferredStaff", fields: [preferredStaffId], references: [id], onDelete: SetNull)
+  skinType           String?   @db.VarChar(60)
+  hairType           String?   @db.VarChar(60)
+  preferences        String?   @db.VarChar(1000)
+  marketingOptIn     Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  appointments Appointment[]
+  reviews      Review[]
+
+  @@map("customer_profile")
+}
+
+model StaffProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug        String   @unique
+  title       String   @db.VarChar(80)
+  bio         String?  @db.VarChar(1000)
+  photoUrl    String?
+  specialties String[]
+  yearsOfExperience Int @default(0)
+  isBookable  Boolean  @default(true)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  services        StaffService[]
+  availability    StaffAvailability[]
+  leaves          StaffLeave[]
+  appointments    Appointment[]
+  preferredBy     CustomerProfile[] @relation("PreferredStaff")
+
+  @@index([isBookable])
+  @@map("staff_profile")
+}
+
+// ───────────────────────────── Catalogue ─────────────────────────────
+
+model ServiceCategory {
+  id          String   @id @default(cuid())
+  name        String   @unique @db.VarChar(80)
+  slug        String   @unique
+  description String?  @db.VarChar(500)
+  imageUrl    String?
+  displayOrder Int     @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  services Service[]
+
+  @@index([isActive, displayOrder])
+  @@map("service_category")
+}
+
+model Service {
+  id               String        @id @default(cuid())
+  categoryId       String
+  category         ServiceCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  name             String        @db.VarChar(120)
+  slug             String        @unique
+  shortDescription String        @db.VarChar(240)
+  description      String        @db.Text
+  price            Decimal       @db.Decimal(10, 2)
+  discountPrice    Decimal?      @db.Decimal(10, 2)
+  durationMinutes  Int
+  imageUrl         String?
+  status           ServiceStatus @default(ACTIVE)
+  isFeatured       Boolean       @default(false)
+  isBridal         Boolean       @default(false)
+  displayOrder     Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  staff               StaffService[]
+  appointmentServices AppointmentService[]
+  packageItems        ServicePackageItem[]
+  offerItems          OfferService[]
+  reviews             Review[]
+
+  @@index([categoryId, status])
+  @@index([status, isFeatured])
+  @@index([price])
+  @@map("service")
+}
+
+model StaffService {
+  staffId   String
+  serviceId String
+  staff     StaffProfile @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  service   Service      @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([staffId, serviceId])
+  @@index([serviceId])
+  @@map("staff_service")
+}
+
+model ServicePackage {
+  id          String   @id @default(cuid())
+  name        String   @db.VarChar(120)
+  slug        String   @unique
+  description String   @db.Text
+  price       Decimal  @db.Decimal(10, 2)
+  imageUrl    String?
+  isBridal    Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  displayOrder Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items ServicePackageItem[]
+
+  @@index([isActive])
+  @@map("service_package")
+}
+
+model ServicePackageItem {
+  packageId String
+  serviceId String
+  package   ServicePackage @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  service   Service        @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  @@id([packageId, serviceId])
+  @@map("service_package_item")
+}
+
+// ───────────────────────────── Booking ─────────────────────────────
+
+model Appointment {
+  id            String            @id @default(cuid())
+  reference     String            @unique @db.VarChar(16)
+  customerId    String?
+  customer      CustomerProfile?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  staffId       String
+  staff         StaffProfile      @relation(fields: [staffId], references: [id], onDelete: Restrict)
+  startAt       DateTime          @db.Timestamptz(3)
+  endAt         DateTime          @db.Timestamptz(3)
+  status        AppointmentStatus @default(PENDING)
+  // Contact snapshot (guests may book without an account)
+  customerName  String            @db.VarChar(120)
+  customerEmail String            @db.VarChar(254)
+  customerPhone String            @db.VarChar(20)
+  notes         String?           @db.VarChar(1000)
+  specialRequirements String?     @db.VarChar(1000)
+  subtotal      Decimal           @db.Decimal(10, 2)
+  discount      Decimal           @default(0) @db.Decimal(10, 2)
+  total         Decimal           @db.Decimal(10, 2)
+  currency      String            @default("INR") @db.Char(3)
+  paymentMethod PaymentMethod     @default(PAY_AT_SALON)
+  paymentStatus PaymentStatus     @default(UNPAID)
+  offerId       String?
+  offer         Offer?            @relation(fields: [offerId], references: [id], onDelete: SetNull)
+  cancellationReason String?      @db.VarChar(500)
+  cancelledAt   DateTime?
+  cancelledBy   UserRole?
+  completedAt   DateTime?
+  rescheduleRequestedStartAt DateTime? @db.Timestamptz(3)
+  rescheduleRequestNote      String?   @db.VarChar(500)
+  rescheduleRequestedAt      DateTime?
+  staffNotes    String?           @db.VarChar(1000)
+  reminderSentAt DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  services AppointmentService[]
+  payments Payment[]
+  review   Review?
+
+  @@index([staffId, startAt])
+  @@index([customerId, startAt])
+  @@index([status, startAt])
+  @@index([startAt])
+  @@index([customerEmail])
+  @@map("appointment")
+}
+
+model AppointmentService {
+  id              String      @id @default(cuid())
+  appointmentId   String
+  appointment     Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  serviceId       String
+  service         Service     @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+  // Snapshots so historical bookings remain accurate after catalogue changes
+  serviceName     String      @db.VarChar(120)
+  price           Decimal     @db.Decimal(10, 2)
+  durationMinutes Int
+  sortOrder       Int         @default(0)
+
+  @@index([appointmentId])
+  @@index([serviceId])
+  @@map("appointment_service")
+}
+
+model StaffAvailability {
+  id          String       @id @default(cuid())
+  staffId     String
+  staff       StaffProfile @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  dayOfWeek   Int          // 0 = Sunday … 6 = Saturday
+  startMinute Int          // minutes from midnight, salon timezone
+  endMinute   Int
+  isAvailable Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@unique([staffId, dayOfWeek])
+  @@map("staff_availability")
+}
+
+model StaffLeave {
+  id        String       @id @default(cuid())
+  staffId   String
+  staff     StaffProfile @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  startDate DateTime     @db.Date
+  endDate   DateTime     @db.Date
+  reason    String?      @db.VarChar(300)
+  createdAt DateTime     @default(now())
+
+  @@index([staffId, startDate, endDate])
+  @@map("staff_leave")
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  appointmentId     String
+  appointment       Appointment   @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
+  method            PaymentMethod
+  status            PaymentStatus @default(PENDING)
+  amount            Decimal       @db.Decimal(10, 2)
+  currency          String        @default("INR") @db.Char(3)
+  razorpayOrderId   String?       @unique
+  razorpayPaymentId String?       @unique
+  razorpayRefundId  String?       @unique
+  failureReason     String?       @db.VarChar(500)
+  paidAt            DateTime?
+  refundedAt        DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([appointmentId])
+  @@index([status, createdAt])
+  @@map("payment")
+}
+
+model WebhookEvent {
+  id         String   @id // provider event id — guarantees idempotent processing
+  provider   String   @db.VarChar(30)
+  type       String   @db.VarChar(80)
+  receivedAt DateTime @default(now())
+
+  @@map("webhook_event")
+}
+
+// ───────────────────────────── Content ─────────────────────────────
+
+model Review {
+  id            String       @id @default(cuid())
+  appointmentId String       @unique
+  appointment   Appointment  @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  customerId    String
+  customer      CustomerProfile @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  serviceId     String?
+  service       Service?     @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  rating        Int
+  title         String?      @db.VarChar(120)
+  comment       String       @db.VarChar(1500)
+  status        ReviewStatus @default(PENDING)
+  isFeatured    Boolean      @default(false)
+  moderatedAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([status, createdAt])
+  @@index([customerId])
+  @@map("review")
+}
+
+model GalleryImage {
+  id           String          @id @default(cuid())
+  title        String          @db.VarChar(120)
+  description  String?         @db.VarChar(500)
+  altText      String          @db.VarChar(200)
+  imageUrl     String
+  category     GalleryCategory
+  isPublished  Boolean         @default(true)
+  showOnInstagram Boolean      @default(false)
+  displayOrder Int             @default(0)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([isPublished, category, displayOrder])
+  @@map("gallery_image")
+}
+
+model Offer {
+  id              String    @id @default(cuid())
+  title           String    @db.VarChar(120)
+  slug            String    @unique
+  description     String    @db.VarChar(1000)
+  imageUrl        String?
+  originalPrice   Decimal   @db.Decimal(10, 2)
+  discountPercent Int
+  discountedPrice Decimal   @db.Decimal(10, 2)
+  validFrom       DateTime  @db.Date
+  validUntil      DateTime  @db.Date
+  isActive        Boolean   @default(true)
+  terms           String?   @db.VarChar(1000)
+  displayOrder    Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  appointments Appointment[]
+  services     OfferService[]
+
+  @@index([isActive, validUntil])
+  @@map("offer")
+}
+
+model OfferService {
+  offerId   String
+  serviceId String
+  offer     Offer   @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@id([offerId, serviceId])
+  @@index([serviceId])
+  @@map("offer_service")
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String        @db.VarChar(120)
+  email     String        @db.VarChar(254)
+  phone     String?       @db.VarChar(20)
+  subject   String        @db.VarChar(160)
+  message   String        @db.VarChar(3000)
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status, createdAt])
+  @@map("contact_message")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String           @db.VarChar(160)
+  body      String           @db.VarChar(1000)
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt, createdAt])
+  @@map("notification")
+}
+
+model SalonSettings {
+  id                      Int      @id @default(1)
+  salonName               String   @default("Beauty Empire") @db.VarChar(120)
+  tagline                 String   @default("Beauty. Confidence. You.") @db.VarChar(160)
+  addressLine1            String   @db.VarChar(200)
+  addressLine2            String?  @db.VarChar(200)
+  city                    String   @db.VarChar(80)
+  state                   String   @db.VarChar(80)
+  postalCode              String   @db.VarChar(12)
+  country                 String   @default("India") @db.VarChar(60)
+  phone                   String   @db.VarChar(20)
+  whatsappNumber          String   @db.VarChar(20)
+  email                   String   @db.VarChar(254)
+  googleMapsEmbedUrl      String?  @db.VarChar(1000)
+  googleMapsLink          String?  @db.VarChar(1000)
+  instagramUrl            String?
+  facebookUrl             String?
+  youtubeUrl              String?
+  timezone                String   @default("Asia/Kolkata") @db.VarChar(60)
+  // { "0": { "open": 600, "close": 1200, "closed": false }, ... } minutes from midnight
+  businessHours           Json
+  slotIntervalMinutes     Int      @default(30)
+  minLeadTimeMinutes      Int      @default(120)
+  maxAdvanceDays          Int      @default(60)
+  bufferMinutes           Int      @default(0)
+  autoConfirmBookings     Boolean  @default(false)
+  cancellationWindowHours Int      @default(24)
+  bookingPolicy           String   @db.Text
+  cancellationPolicy      String   @db.Text
+  onlinePaymentsEnabled   Boolean  @default(false)
+  payAtSalonEnabled       Boolean  @default(true)
+  updatedAt               DateTime @updatedAt
+
+  @@map("salon_settings")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String   @db.VarChar(80)
+  entityType String   @db.VarChar(60)
+  entityId   String?
+  metadata   Json?
+  ipAddress  String?  @db.VarChar(64)
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([actorId, createdAt])
+  @@index([createdAt])
+  @@map("audit_log")
+}

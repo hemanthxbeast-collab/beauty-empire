@@ -1,0 +1,180 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ───────────── Beauty Empire design tokens ───────────── */
+:root {
+  --magenta: #c21870;
+  --magenta-deep: #9d145a;
+  --blush: #fce7f0;
+  --rose: #f4b6cf;
+  --ivory: #fff9f7;
+  --champagne: #e8d5bd;
+  --charcoal: #292329;
+  --muted-rose: #a77b8d;
+  --soft-grey: #f5f3f4;
+
+  --radius: 0.875rem;
+  --background: #ffffff;
+  --foreground: var(--charcoal);
+  --card: #ffffff;
+  --card-foreground: var(--charcoal);
+  --popover: #ffffff;
+  --popover-foreground: var(--charcoal);
+  --primary: var(--magenta);
+  --primary-foreground: #ffffff;
+  --secondary: var(--blush);
+  --secondary-foreground: var(--magenta-deep);
+  --muted: var(--soft-grey);
+  --muted-foreground: #6e6168;
+  --accent: var(--blush);
+  --accent-foreground: var(--magenta-deep);
+  --destructive: #c0352b;
+  --border: #eedde4;
+  --input: #e6d3db;
+  --ring: var(--magenta);
+}
+
+@theme inline {
+  --font-serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --color-magenta: var(--magenta);
+  --color-magenta-deep: var(--magenta-deep);
+  --color-blush: var(--blush);
+  --color-rose: var(--rose);
+  --color-ivory: var(--ivory);
+  --color-champagne: var(--champagne);
+  --color-charcoal: var(--charcoal);
+  --color-muted-rose: var(--muted-rose);
+  --color-soft-grey: var(--soft-grey);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+
+  --shadow-soft: 0 1px 2px rgb(41 35 41 / 0.04), 0 8px 24px -12px rgb(157 20 90 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(41 35 41 / 0.04), 0 24px 48px -20px rgb(157 20 90 / 0.25);
+
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/40;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-serif);
+    font-optical-sizing: auto;
+    letter-spacing: -0.01em;
+  }
+  ::selection {
+    background: var(--rose);
+    color: var(--charcoal);
+  }
+  :focus-visible {
+    outline: 2px solid var(--magenta);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-lux {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+  .eyebrow {
+    @apply text-[0.7rem] font-semibold tracking-[0.28em] text-magenta uppercase;
+  }
+  .heading-xl {
+    @apply font-serif text-[2.75rem] leading-[1.02] font-normal tracking-tight text-charcoal sm:text-6xl lg:text-[5.25rem];
+  }
+  .heading-lg {
+    @apply font-serif text-4xl leading-[1.08] font-normal text-charcoal sm:text-5xl;
+  }
+  .heading-md {
+    @apply font-serif text-2xl leading-tight font-normal text-charcoal sm:text-3xl;
+  }
+  .lead {
+    @apply text-base leading-relaxed text-muted-foreground sm:text-lg;
+  }
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-rose to-transparent;
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--soft-grey) 25%, #fbf7f8 37%, var(--soft-grey) 63%);
+    background-size: 400% 100%;
+    @apply animate-shimmer rounded-md;
+  }
+  /* First-paint entrance (no JavaScript required) */
+  .fade-in-up {
+    animation: fade-in-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  /* Scroll reveal: progressive enhancement via scroll-driven animations */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry calc(0% + var(--reveal-delay, 0%)) entry calc(40% + var(--reveal-delay, 0%));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in-up,
+    .reveal {
+      animation: none !important;
+    }
+  }
+  .prose-lux p { @apply mb-4 leading-relaxed text-muted-foreground; }
+  .prose-lux h2 { @apply mt-10 mb-3 font-serif text-2xl text-charcoal; }
+  .prose-lux ul { @apply mb-4 list-disc space-y-1 pl-5 text-muted-foreground; }
+}

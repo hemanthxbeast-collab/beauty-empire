@@ -1,0 +1,16 @@
+# Local development database. Usage: docker compose up -d
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: beauty-empire-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: beauty
+      POSTGRES_PASSWORD: beauty_dev_pw
+      POSTGRES_DB: beauty_empire
+    ports:
+      - "5433:5432"
+    volumes:
+      - beauty_empire_pg:/var/lib/postgresql/data
+volumes:
+  beauty_empire_pg:

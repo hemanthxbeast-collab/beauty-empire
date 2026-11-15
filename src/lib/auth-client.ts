@@ -1,0 +1,21 @@
+"use client";
+
+import { createAuthClient } from "better-auth/react";
+import { inferAdditionalFields } from "better-auth/client/plugins";
+
+export const authClient = createAuthClient({
+  plugins: [
+    inferAdditionalFields({
+      user: {
+        phone: { type: "string", required: false },
+        role: { type: "string", required: false, input: false },
+      },
+    }),
+  ],
+});
+
+/** Only allow same-site relative redirects (prevents open-redirects via ?next=). */
+export function safeNext(next: string | null | undefined, fallback = "/dashboard") {
+  if (!next || !next.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) return fallback;
+  return next;
+}

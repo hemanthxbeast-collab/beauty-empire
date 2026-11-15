@@ -1,0 +1,28 @@
+# dependencies
+node_modules/
+# next
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+# env
+.env
+.env.local
+.env.*.local
+.env.test
+!.env.example
+# prisma generated client
+src/generated/
+# dev artefacts
+.dev-mail/
+public/uploads/
+# tests
+playwright-report/
+test-results/
+coverage/
+# misc
+.DS_Store
+.vercel
+
+# e2e
+test-results-e2e.log
