@@ -1,0 +1,1023 @@
+{
+  "label": "after",
+  "base": "http://localhost:3000",
+  "at": "2026-11-17T05:29:47.905Z",
+  "pages": [
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/forgot-password",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/reset-password",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/privacy-policy",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/terms",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/forgot-password",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/reset-password",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/privacy-policy",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/terms",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/forgot-password",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/reset-password",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/privacy-policy",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/terms",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/notifications",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/notifications",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/notifications",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/bookings/cmwhxi9gx00djaorx0pq78uoh",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/book/confirmation/BE-YR2X2EPP",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/services/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/services/packages/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/categories",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/staff/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/customers?tab=messages",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/offers/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/payments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/bookings/cmwhxi9gx00djaorx0pq78uoh",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/book/confirmation/BE-YR2X2EPP",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/services/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/services/packages/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/categories",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/staff/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/customers?tab=messages",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/offers/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/payments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/bookings/cmwhxi9gx00djaorx0pq78uoh",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/book/confirmation/BE-YR2X2EPP",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/services/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/services/packages/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/categories",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/staff/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/customers?tab=messages",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/offers/new",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/payments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    }
+  ],
+  "summary": {},
+  "totals": {
+    "pageLoads": 126,
+    "axeScans": 126,
+    "axeNodes": 0,
+    "overflowPages": [],
+    "non200": []
+  }
+}

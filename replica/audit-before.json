@@ -1,0 +1,1600 @@
+{
+  "label": "before",
+  "base": "http://localhost:3000",
+  "at": "2026-11-16T18:02:32.723Z",
+  "pages": [
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 17,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\].mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 10,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 55,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .mt-1.text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 48,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\].mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 5,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 14,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .mt-1.text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 10,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        },
+        {
+          "id": "list",
+          "impact": "serious",
+          "count": 1,
+          "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+          "sample": "ol"
+        },
+        {
+          "id": "listitem",
+          "impact": "serious",
+          "count": 4,
+          "help": "<li> elements must be contained in a <ul> or <ol>",
+          "sample": ".reveal:nth-child(1) > .bg-ivory\\/60.p-7.h-full"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-muted-rose"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none.inline-flex[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 3,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .mt-1.text-\\[0\\.55rem\\].font-semibold"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 7,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none.group[aria-label=\"Beauty Empire — home\"] > .text-\\[0\\.55rem\\].font-semibold.tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none.group[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 3,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-muted-rose"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none.group[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .group.leading-none[aria-label=\"Beauty Empire — home\"] > .mt-1.text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .group.leading-none[aria-label=\"Beauty Empire — home\"]"
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "count": 1,
+          "help": "Scrollable region must have keyboard access",
+          "sample": "ol"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        },
+        {
+          "id": "link-in-text-block",
+          "impact": "serious",
+          "count": 2,
+          "help": "Links must be distinguishable without relying on color",
+          "sample": "a[href$=\"terms\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 17,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\].mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 10,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 55,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .mt-1.text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 48,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\].mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 5,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 14,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .mt-1.text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 10,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        },
+        {
+          "id": "list",
+          "impact": "serious",
+          "count": 1,
+          "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+          "sample": "ol"
+        },
+        {
+          "id": "listitem",
+          "impact": "serious",
+          "count": 4,
+          "help": "<li> elements must be contained in a <ul> or <ol>",
+          "sample": ".reveal:nth-child(1) > .bg-ivory\\/60.p-7.h-full"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-muted-rose"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none.inline-flex[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 3,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"] > .mt-1.text-\\[0\\.55rem\\].font-semibold"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none[aria-label=\"Beauty Empire — home\"][href=\"/\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 7,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .leading-none.group[aria-label=\"Beauty Empire — home\"] > .text-\\[0\\.55rem\\].font-semibold.tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none.group[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 3,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-muted-rose"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .leading-none.group[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-20 > .group.leading-none[aria-label=\"Beauty Empire — home\"] > .mt-1.text-\\[0\\.55rem\\].tracking-\\[0\\.42em\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".h-20 > .group.leading-none[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        },
+        {
+          "id": "link-in-text-block",
+          "impact": "serious",
+          "count": 2,
+          "help": "Links must be distinguishable without relying on color",
+          "sample": "a[href$=\"terms\"]"
+        }
+      ]
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 4,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-white\\/75"
+        }
+      ]
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-3.text-muted-rose.text-xs"
+        }
+      ]
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 6,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-\\[0\\.55rem\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": "a[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-\\[0\\.55rem\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": "a[aria-label=\"Beauty Empire — home\"]"
+        }
+      ]
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 3,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 4,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-white\\/75"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 7,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": "section:nth-child(1) > h2"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 7,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 6,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-\\[0\\.55rem\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 9,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-\\[0\\.55rem\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 38,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 15,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-white\\/75"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-left:nth-child(1)"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 12,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".overflow-x-auto.rounded-2xl.bg-white:nth-child(3) > table > thead > tr > .text-left:nth-child(1)"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 6,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": "th:nth-child(1)"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 7,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-left:nth-child(1)"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 6,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": "li:nth-child(1) > .sm\\:items-start.sm\\:flex-row.sm\\:justify-between > div:nth-child(1) > .text-muted-rose.text-xs.mt-3"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 17,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-\\[0\\.55rem\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".leading-none"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 10,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 14,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 9,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".text-\\[0\\.55rem\\]"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".mt-1"
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".group"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "color-contrast": {
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "nodes": 398,
+      "pages": [
+        "/@mobile",
+        "/services@mobile",
+        "/services/hydra-facial@mobile",
+        "/bridal@mobile",
+        "/gallery@mobile",
+        "/offers@mobile",
+        "/about@mobile",
+        "/contact@mobile",
+        "/book@mobile",
+        "/login@mobile",
+        "/register@mobile",
+        "/@desktop",
+        "/services@desktop",
+        "/services/hydra-facial@desktop",
+        "/bridal@desktop",
+        "/gallery@desktop",
+        "/offers@desktop",
+        "/about@desktop",
+        "/contact@desktop",
+        "/book@desktop",
+        "/login@desktop",
+        "/register@desktop",
+        "/account@mobile",
+        "/account/reviews@mobile",
+        "/account@desktop",
+        "/account/appointments@desktop",
+        "/account/profile@desktop",
+        "/account/reviews@desktop",
+        "/staff@mobile",
+        "/staff/appointments@mobile",
+        "/staff@desktop",
+        "/staff/appointments@desktop",
+        "/staff/availability@desktop",
+        "/admin@mobile",
+        "/admin/bookings@mobile",
+        "/admin/services@mobile",
+        "/admin/customers@mobile",
+        "/admin/offers@mobile",
+        "/admin/reviews@mobile",
+        "/admin@desktop",
+        "/admin/bookings@desktop",
+        "/admin/services@desktop",
+        "/admin/staff@desktop",
+        "/admin/customers@desktop",
+        "/admin/gallery@desktop",
+        "/admin/offers@desktop",
+        "/admin/reviews@desktop",
+        "/admin/settings@desktop"
+      ]
+    },
+    "label-content-name-mismatch": {
+      "impact": "serious",
+      "help": "Elements must have their visible text as part of their accessible name",
+      "nodes": 210,
+      "pages": [
+        "/@mobile",
+        "/services@mobile",
+        "/services/hydra-facial@mobile",
+        "/bridal@mobile",
+        "/gallery@mobile",
+        "/offers@mobile",
+        "/about@mobile",
+        "/contact@mobile",
+        "/book@mobile",
+        "/login@mobile",
+        "/register@mobile",
+        "/@desktop",
+        "/services@desktop",
+        "/services/hydra-facial@desktop",
+        "/bridal@desktop",
+        "/gallery@desktop",
+        "/offers@desktop",
+        "/about@desktop",
+        "/contact@desktop",
+        "/book@desktop",
+        "/login@desktop",
+        "/register@desktop",
+        "/account@desktop",
+        "/account/appointments@desktop",
+        "/account/profile@desktop",
+        "/account/reviews@desktop",
+        "/staff@mobile",
+        "/staff/appointments@mobile",
+        "/staff/availability@mobile",
+        "/staff@desktop",
+        "/staff/appointments@desktop",
+        "/staff/availability@desktop",
+        "/admin@mobile",
+        "/admin/bookings@mobile",
+        "/admin/services@mobile",
+        "/admin/staff@mobile",
+        "/admin/customers@mobile",
+        "/admin/gallery@mobile",
+        "/admin/offers@mobile",
+        "/admin/reviews@mobile",
+        "/admin/settings@mobile",
+        "/admin@desktop",
+        "/admin/bookings@desktop",
+        "/admin/services@desktop",
+        "/admin/staff@desktop",
+        "/admin/customers@desktop",
+        "/admin/gallery@desktop",
+        "/admin/offers@desktop",
+        "/admin/reviews@desktop",
+        "/admin/settings@desktop"
+      ]
+    },
+    "list": {
+      "impact": "serious",
+      "help": "<ul> and <ol> must only directly contain <li>, <script> or <template> elements",
+      "nodes": 2,
+      "pages": [
+        "/bridal@mobile",
+        "/bridal@desktop"
+      ]
+    },
+    "listitem": {
+      "impact": "serious",
+      "help": "<li> elements must be contained in a <ul> or <ol>",
+      "nodes": 8,
+      "pages": [
+        "/bridal@mobile",
+        "/bridal@desktop"
+      ]
+    },
+    "scrollable-region-focusable": {
+      "impact": "serious",
+      "help": "Scrollable region must have keyboard access",
+      "nodes": 1,
+      "pages": [
+        "/book@mobile"
+      ]
+    },
+    "link-in-text-block": {
+      "impact": "serious",
+      "help": "Links must be distinguishable without relying on color",
+      "nodes": 4,
+      "pages": [
+        "/register@mobile",
+        "/register@desktop"
+      ]
+    }
+  },
+  "totals": {
+    "pages": 81,
+    "axeNodes": 623,
+    "overflowPages": [
+      "/staff/availability@mobile",
+      "/staff/availability@desktop"
+    ],
+    "non200": []
+  }
+}

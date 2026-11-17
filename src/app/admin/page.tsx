@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AlertCircle, ArrowRight, CalendarClock, MessageSquare, Star } from "lucide-react";
 import { PageHeader, StatCard } from "@/components/dashboard/shell";
-import { StatusBadge } from "@/components/dashboard/status-badge";
+import { PaymentBadge, StatusBadge } from "@/components/dashboard/status-badge";
 import { Card, CardContent, CardHeader, CardTitle, Table, TBody, TD, TH, THead, TR } from "@/components/ui/primitives";
 import { ColumnChart, RankedBars, TrendChart } from "@/components/admin/charts";
 import { requireAdmin } from "@/server/session";
@@ -48,7 +48,44 @@ export default async function AdminDashboard() {
         <StatCard label="Reviews to moderate" value={d.stats.pendingReviews} />
       </div>
 
-      <div className="mt-6 grid gap-6 xl:grid-cols-2">
+      <section aria-labelledby="today-heading" className="mt-8">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 id="today-heading" className="font-serif text-2xl text-charcoal">
+            Today&apos;s schedule
+          </h2>
+          <Link href={`/admin/bookings?from=${formatInTz(new Date(), "yyyy-MM-dd", settings.timezone)}&to=${formatInTz(new Date(), "yyyy-MM-dd", settings.timezone)}`} className="link-inline text-sm">
+            Open in bookings
+          </Link>
+        </div>
+        {d.todaySchedule.length === 0 ? (
+          <p className="rounded-2xl border border-dashed border-rose/70 bg-white px-5 py-8 text-center text-sm text-muted-foreground">No appointments today.</p>
+        ) : (
+          <ol className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-white">
+            {d.todaySchedule.map((a) => (
+              <li key={a.id}>
+                <Link href={`/admin/bookings/${a.id}`} className="flex flex-wrap items-center gap-x-5 gap-y-1 px-5 py-3.5 transition hover:bg-ivory">
+                  <span className="w-28 shrink-0 font-serif text-lg text-charcoal tabular-nums">
+                    {formatInTz(a.startAt, "h:mm a", settings.timezone)}
+                    <span className="block font-sans text-xs text-muted-foreground">to {formatInTz(a.endAt, "h:mm a", settings.timezone)}</span>
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-medium text-charcoal">{a.customerName}</span>
+                    <span className="block truncate text-sm text-muted-foreground">
+                      {a.services.map((x) => x.serviceName).join(", ")} · {a.staff.user.name}
+                    </span>
+                  </span>
+                  <span className="flex gap-1.5">
+                    <StatusBadge status={a.status} />
+                    <PaymentBadge status={a.paymentStatus} />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        )}
+      </section>
+
+      <div className="mt-8 grid gap-6 xl:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Weekly appointments</CardTitle>

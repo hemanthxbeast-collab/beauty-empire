@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-import { bookViaWizard, credentials, login } from "./helpers";
+import { bookViaWizard, credentials, expect, login, test } from "./helpers";
 
 test.describe("Scenario 4 & 9 — customer booking lifecycle", () => {
   test("a signed-in customer books, sees and cancels an appointment", async ({ page }) => {

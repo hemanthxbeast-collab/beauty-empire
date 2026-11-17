@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./helpers";
 
 test.describe("Responsive layout & public pages", () => {
   for (const path of ["/", "/services", "/bridal", "/gallery", "/offers", "/about", "/contact", "/book"]) {

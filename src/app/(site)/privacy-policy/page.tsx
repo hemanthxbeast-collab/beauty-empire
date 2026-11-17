@@ -32,8 +32,9 @@ export default async function PrivacyPage() {
           </ul>
           <h2>Sharing</h2>
           <p>
-            We do not sell your personal data. We share it only with service providers that help us operate (hosting, email delivery,
-            payment processing and image hosting), under appropriate confidentiality obligations, or where required by law.
+            We do not sell your personal data. We share it only with service providers that help us operate, under appropriate
+            confidentiality obligations, or where required by law: our hosting and database providers, Resend (email delivery),
+            Razorpay (online payments, if you pay online), Cloudinary (images uploaded by the salon) and Upstash (abuse protection).
           </p>
           <h2>Security &amp; retention</h2>
           <p>
@@ -42,8 +43,9 @@ export default async function PrivacyPage() {
           </p>
           <h2>Your rights</h2>
           <p>
-            You may access and update your information from your account, or ask us to correct or erase your data by emailing{" "}
-            <a href={`mailto:${s.email}`} className="text-magenta">
+            You may access and update your information from your account and delete your account yourself from{" "}
+            <strong>My Account → Profile → Delete account</strong>. You can also ask us to correct or erase your data by emailing{" "}
+            <a href={`mailto:${s.email}`} className="link-inline">
               {s.email}
             </a>
             .

@@ -94,7 +94,7 @@ export function LoginForm({ next, notice }: { next?: string; notice?: "reset" | 
           <PasswordInput id="password" autoComplete="current-password" aria-invalid={!!errors.password || undefined} {...form.register("password")} />
         </Field>
         <div className="flex justify-end">
-          <Link href="/forgot-password" className="text-sm text-magenta hover:underline">
+          <Link href="/forgot-password" className="link-inline text-sm">
             Forgot password?
           </Link>
         </div>
@@ -104,7 +104,7 @@ export function LoginForm({ next, notice }: { next?: string; notice?: "reset" | 
       </form>
       <p className="mt-8 text-center text-sm text-muted-foreground">
         New to Beauty Empire?{" "}
-        <Link href={`/register${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="font-medium text-magenta hover:underline">
+        <Link href={`/register${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="link-inline font-medium">
           Create an account
         </Link>
       </p>

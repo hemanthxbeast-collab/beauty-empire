@@ -304,6 +304,8 @@ model ServicePackageItem {
 model Appointment {
   id            String            @id @default(cuid())
   reference     String            @unique @db.VarChar(16)
+  // Client-generated key: a retried/double-submitted booking request returns the original booking.
+  idempotencyKey String?          @unique @db.VarChar(64)
   customerId    String?
   customer      CustomerProfile?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
   staffId       String

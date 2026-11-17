@@ -34,7 +34,6 @@ export default async function BridalPage() {
   return (
     <>
       <section className="relative overflow-hidden bg-charcoal text-white">
-        <div aria-hidden className="pointer-events-none absolute -top-40 right-0 size-[36rem] rounded-full bg-magenta/30 blur-[140px]" />
         <div className="container-lux relative grid items-center gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-28">
           <Reveal>
             <p className="eyebrow !text-rose">The Bridal Studio</p>
@@ -72,13 +71,11 @@ export default async function BridalPage() {
           <SectionHeading eyebrow="Your Journey" title="How we prepare you for the big day" />
           <ol className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {STEPS.map(({ icon: Icon, title, text }, i) => (
-              <Reveal key={title} delay={i * 0.06}>
-                <li className="h-full rounded-2xl border border-border bg-ivory/60 p-7">
+              <Reveal as="li" key={title} delay={i * 0.06} className="h-full rounded-xl border border-border bg-ivory/60 p-7">
                   <span className="font-serif text-sm text-muted-rose">0{i + 1}</span>
                   <Icon className="mt-4 size-6 text-magenta" aria-hidden />
                   <h3 className="mt-4 font-serif text-xl text-charcoal">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
-                </li>
               </Reveal>
             ))}
           </ol>
@@ -144,7 +141,7 @@ export default async function BridalPage() {
       {gallery.length > 0 && (
         <section className="bg-ivory py-24">
           <div className="container-lux">
-            <SectionHeading eyebrow="Our Brides" title="Real bridal looks" />
+            <SectionHeading eyebrow="Bridal Gallery" title="Bridal looks" />
             <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3">
               {gallery.slice(0, 6).map((g, i) => (
                 <Reveal key={g.id} delay={(i % 3) * 0.05} className="relative aspect-[3/4] overflow-hidden rounded-2xl">
@@ -172,7 +169,7 @@ export default async function BridalPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <WhatsappIcon className="size-4 text-[#1f9d55]" /> WhatsApp the bridal team
+                  <WhatsappIcon className="size-4 text-whatsapp" /> WhatsApp the bridal team
                 </a>
               </Button>
               {bridalMakeup && (

@@ -109,7 +109,7 @@ export default async function ServicesPage({ searchParams }: { searchParams: SP 
                   category === c.slug ? "border-magenta bg-magenta text-white" : "border-border bg-white text-charcoal/80 hover:border-magenta hover:text-magenta",
                 )}
               >
-                {c.name} <span className="opacity-60">({c._count.services})</span>
+                {c.name} <span className={category === c.slug ? "text-white" : "text-muted-foreground"}>({c._count.services})</span>
               </Link>
             ))}
           </nav>

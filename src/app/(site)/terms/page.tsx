@@ -35,7 +35,7 @@ export default async function TermsPage() {
           <h2>Contact</h2>
           <p>
             Questions about these terms? Email{" "}
-            <a href={`mailto:${s.email}`} className="text-magenta">
+            <a href={`mailto:${s.email}`} className="link-inline">
               {s.email}
             </a>
             .

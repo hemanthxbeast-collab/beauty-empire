@@ -67,10 +67,13 @@ export function BookingWizard({ data }: { data: WizardData }) {
   const [paymentMethod, setPaymentMethod] = useState<"PAY_AT_SALON" | "RAZORPAY">(data.payAtSalon ? "PAY_AT_SALON" : "RAZORPAY");
   const [acceptPolicy, setAcceptPolicy] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  // One key per booking attempt: a double click or a retry after a network error returns the same booking.
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [query, setQuery] = useState("");
-  const [slots, setSlots] = useState<Slot[] | null>(null);
-  const [slotsError, setSlotsError] = useState<string | null>(null);
-  const [slotsLoading, setSlotsLoading] = useState(false);
+  // Availability results are stored with the query they answer, so stale results are never shown.
+  const [avail, setAvail] = useState<{ key: string; slots: Slot[] | null; error: string | null }>({ key: "", slots: null, error: null });
+  const [reloadNonce, setReloadNonce] = useState(0);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const selected = useMemo(() => serviceIds.map((id) => allServices.find((s) => s.id === id)).filter(Boolean) as WizardService[], [serviceIds, allServices]);
   const duration = selected.reduce((sum, s) => sum + s.durationMinutes, 0);
@@ -83,38 +86,43 @@ export function BookingWizard({ data }: { data: WizardData }) {
     () => data.staff.filter((st) => selected.every((s) => s.staffIds.length === 0 || s.staffIds.includes(st.id))),
     [data.staff, selected],
   );
-  const chosenStaff = data.staff.find((s) => s.id === staffId) ?? null;
+  // A professional who no longer offers every selected service falls back to "no preference" (derived, not synced).
+  const effectiveStaffId = staffId === "any" || eligibleStaff.some((s) => s.id === staffId) ? staffId : "any";
+  const chosenStaff = data.staff.find((s) => s.id === effectiveStaffId) ?? null;
 
-  // Keep the professional choice valid when services change.
-  useEffect(() => {
-    if (staffId !== "any" && !eligibleStaff.some((s) => s.id === staffId)) setStaffId("any");
-  }, [eligibleStaff, staffId]);
+  const availKey = date && selected.length ? `${serviceIds.join(",")}|${effectiveStaffId}|${date}|${reloadNonce}` : "";
+  const slots = avail.key === availKey ? avail.slots : null;
+  const slotsError = avail.key === availKey ? avail.error : null;
+  const slotsLoading = step === 3 && Boolean(availKey) && avail.key !== availKey;
 
-  // Reset downstream choices when upstream inputs change.
+  // Load availability for the chosen date (state is only set from the async callbacks).
   useEffect(() => {
-    setSlot(null);
-    setSlots(null);
-  }, [serviceIds, staffId, date]);
-
-  // Load availability for the chosen date.
-  useEffect(() => {
-    if (step !== 3 || !date || selected.length === 0) return;
+    if (step !== 3 || !availKey || !date) return;
     const ctrl = new AbortController();
-    setSlotsLoading(true);
-    setSlotsError(null);
-    const qs = new URLSearchParams({ serviceIds: serviceIds.join(","), staffId, date });
+    const qs = new URLSearchParams({ serviceIds: serviceIds.join(","), staffId: effectiveStaffId, date });
     fetch(`/api/availability?${qs}`, { signal: ctrl.signal, cache: "no-store" })
       .then(async (r) => {
-        const body = await r.json();
-        if (!r.ok) throw new Error(body.error ?? "Could not load availability");
-        setSlots(body.slots as Slot[]);
+        const body = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(body.error ?? "We couldn't load available times.");
+        setAvail({ key: availKey, slots: body.slots as Slot[], error: null });
       })
       .catch((e: Error) => {
-        if (e.name !== "AbortError") setSlotsError(e.message);
-      })
-      .finally(() => setSlotsLoading(false));
+        if (e.name === "AbortError") return;
+        const offline = e instanceof TypeError || (typeof navigator !== "undefined" && !navigator.onLine);
+        setAvail({ key: availKey, slots: null, error: offline ? "You appear to be offline. Check your connection and try again." : e.message });
+      });
     return () => ctrl.abort();
-  }, [step, date, serviceIds, staffId, selected.length]);
+  }, [step, availKey, date, serviceIds, effectiveStaffId]);
+
+  // Changing an earlier choice clears the later ones (done in the handlers, not in effects).
+  function chooseStaff(id: string) {
+    setStaffId(id);
+    setSlot(null);
+  }
+  function chooseDate(d: string) {
+    setDate(d);
+    setSlot(null);
+  }
 
   const detailsForm = useForm<Details>({
     resolver: zodResolver(customerDetailsSchema),
@@ -124,7 +132,12 @@ export function BookingWizard({ data }: { data: WizardData }) {
   const canContinue = [selected.length > 0, true, Boolean(date), Boolean(slot), Boolean(details), acceptPolicy][step];
 
   function toggleService(id: string) {
-    setServiceIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : ids.length >= 6 ? (toast.error("You can book up to 6 services at once."), ids) : [...ids, id]));
+    if (!serviceIds.includes(id) && serviceIds.length >= 6) {
+      toast.error("You can book up to 6 services at once.");
+      return;
+    }
+    setServiceIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
+    setSlot(null);
   }
 
   function go(to: number) {
@@ -133,22 +146,30 @@ export function BookingWizard({ data }: { data: WizardData }) {
   }
 
   async function submit() {
-    if (!date || !slot || !details) return;
+    if (!date || !slot || !details || submitting) return;
     setSubmitting(true);
+    setSubmitError(null);
     try {
       const res = await createBookingAction({
         serviceIds,
-        staffId,
+        staffId: effectiveStaffId,
         date,
         minuteOfDay: slot.minuteOfDay,
         customer: details,
         paymentMethod,
         offerId: data.offer?.id,
+        idempotencyKey,
         acceptPolicy: true,
       });
       if (!res.ok) {
+        setSubmitError(res.error);
         toast.error(res.error);
-        if (/slot|time/i.test(res.error)) go(3);
+        if (/slot|time|booked/i.test(res.error)) {
+          // The slot was taken meanwhile: go back to times with a fresh list.
+          setSlot(null);
+          setReloadNonce((n) => n + 1);
+          go(3);
+        }
         return;
       }
       const confirmUrl = `/book/confirmation/${res.data.reference}?t=${res.data.token}`;
@@ -160,7 +181,11 @@ export function BookingWizard({ data }: { data: WizardData }) {
       }
       router.push(confirmUrl);
     } catch {
-      toast.error("Something went wrong. Please try again.");
+      // Network failure: the booking may or may not have been created. Retrying is safe —
+      // the same idempotency key returns the original booking instead of creating a second one.
+      const msg = "We couldn't reach the salon's server. Check your connection and press Confirm again — you won't be double-booked.";
+      setSubmitError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
@@ -187,7 +212,15 @@ export function BookingWizard({ data }: { data: WizardData }) {
 
       {/* Step indicator */}
       <nav aria-label="Booking progress">
-        <ol className="flex gap-2 overflow-x-auto pb-2">
+        <div className="sm:hidden">
+          <p className="text-sm text-charcoal">
+            <span className="font-semibold">Step {step + 1} of {STEPS.length}</span> · {STEPS[step]}
+          </p>
+          <div className="mt-2 h-1 rounded-full bg-soft-grey" aria-hidden>
+            <div className="h-1 rounded-full bg-magenta transition-all duration-300" style={{ width: `${((step + 1) / STEPS.length) * 100}%` }} />
+          </div>
+        </div>
+        <ol className="hidden flex-wrap gap-2 sm:flex">
           {STEPS.map((label, i) => {
             const done = i < step;
             const current = i === step;
@@ -297,10 +330,10 @@ export function BookingWizard({ data }: { data: WizardData }) {
                     Choose your professional
                   </h2>
                   <p className="mt-2 text-sm text-muted-foreground">Showing professionals who offer all of your selected services.</p>
-                  <div role="radiogroup" aria-labelledby="step-staff" className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <div role="group" aria-labelledby="step-staff" className="mt-6 grid gap-3 sm:grid-cols-2">
                     <StaffOption
-                      checked={staffId === "any"}
-                      onSelect={() => setStaffId("any")}
+                      checked={effectiveStaffId === "any"}
+                      onSelect={() => chooseStaff("any")}
                       title="No preference"
                       subtitle="We'll match you with the first available expert"
                       avatar={
@@ -312,8 +345,8 @@ export function BookingWizard({ data }: { data: WizardData }) {
                     {eligibleStaff.map((st) => (
                       <StaffOption
                         key={st.id}
-                        checked={staffId === st.id}
-                        onSelect={() => setStaffId(st.id)}
+                        checked={effectiveStaffId === st.id}
+                        onSelect={() => chooseStaff(st.id)}
                         title={st.name}
                         subtitle={`${st.title} · ${st.years}+ yrs`}
                         tags={st.specialties}
@@ -351,7 +384,7 @@ export function BookingWizard({ data }: { data: WizardData }) {
                     <Calendar
                       value={date}
                       onChange={(d) => {
-                        setDate(d);
+                        chooseDate(d);
                         go(3);
                       }}
                       minDate={data.today}
@@ -374,7 +407,7 @@ export function BookingWizard({ data }: { data: WizardData }) {
                   </h2>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {dateLabel} · {formatDuration(duration)} appointment.{" "}
-                    <button type="button" onClick={() => go(2)} className="text-magenta hover:underline">
+                    <button type="button" onClick={() => go(2)} className="link-inline">
                       Change date
                     </button>
                   </p>
@@ -386,7 +419,14 @@ export function BookingWizard({ data }: { data: WizardData }) {
                         ))}
                       </div>
                     )}
-                    {slotsError && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{slotsError}</p>}
+                    {slotsError && (
+                      <div role="alert" className="flex flex-col items-start gap-3 rounded-xl bg-red-50 px-4 py-4 text-sm text-red-800 sm:flex-row sm:items-center sm:justify-between">
+                        <span>{slotsError}</span>
+                        <Button size="sm" variant="outline" onClick={() => setReloadNonce((n) => n + 1)}>
+                          Try again
+                        </Button>
+                      </div>
+                    )}
                     {!slotsLoading && slots && slots.length === 0 && (
                       <div className="rounded-2xl border border-dashed border-rose bg-white px-6 py-10 text-center">
                         <p className="font-serif text-xl text-charcoal">No times available on this date</p>
@@ -410,13 +450,13 @@ export function BookingWizard({ data }: { data: WizardData }) {
                           return (
                             <div key={label}>
                               <h3 className="text-xs font-semibold tracking-[0.18em] text-muted-rose uppercase">{label}</h3>
-                              <div role="radiogroup" aria-label={`${label} times`} className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
+                              <div role="group" aria-label={`${label} times`} className="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
                                 {group.map((s) => (
                                   <button
                                     key={s.minuteOfDay}
                                     type="button"
-                                    role="radio"
-                                    aria-checked={slot?.minuteOfDay === s.minuteOfDay}
+                                    data-time={s.minuteOfDay}
+                                    aria-pressed={slot?.minuteOfDay === s.minuteOfDay}
                                     onClick={() => setSlot(s)}
                                     className={cn(
                                       "h-11 rounded-full border text-sm transition",
@@ -444,7 +484,7 @@ export function BookingWizard({ data }: { data: WizardData }) {
                   </h2>
                   {!data.user && (
                     <p className="mt-2 text-sm text-muted-foreground">
-                      <Link href="/login?next=/book" className="text-magenta hover:underline">
+                      <Link href="/login?next=/book" className="link-inline">
                         Sign in
                       </Link>{" "}
                       to manage this booking from your account, or continue as a guest.
@@ -490,7 +530,7 @@ export function BookingWizard({ data }: { data: WizardData }) {
                   <h2 id="step-payment" className="heading-md">
                     Payment
                   </h2>
-                  <div role="radiogroup" aria-labelledby="step-payment" className="mt-6 grid gap-3 sm:grid-cols-2">
+                  <div role="group" aria-labelledby="step-payment" className="mt-6 grid gap-3 sm:grid-cols-2">
                     <PaymentOption
                       checked={paymentMethod === "PAY_AT_SALON"}
                       disabled={!data.payAtSalon}
@@ -523,12 +563,24 @@ export function BookingWizard({ data }: { data: WizardData }) {
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation */}
+          {step === 5 && submitError && (
+            <p role="alert" className="mt-6 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800">
+              {submitError}
+            </p>
+          )}
+
+          {/* Navigation — sticky on small screens, with the running total always visible */}
           <div className="sticky bottom-0 z-20 -mx-5 mt-10 flex items-center justify-between gap-3 border-t border-border bg-ivory/95 px-5 py-4 backdrop-blur sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:bg-transparent lg:px-0 lg:pt-6 lg:pb-0 lg:backdrop-blur-none">
             <Button variant="ghost" onClick={() => go(Math.max(0, step - 1))} disabled={step === 0 || submitting}>
               <ArrowLeft /> Back
             </Button>
-            {step < 4 && step !== 2 && (
+            {selected.length > 0 && (
+              <p className="text-right text-xs leading-tight text-muted-foreground lg:hidden" aria-live="polite">
+                {selected.length} {selected.length === 1 ? "service" : "services"}
+                <span className="block font-serif text-base text-charcoal">{formatINR(total, { decimals: total % 1 !== 0 })}</span>
+              </p>
+            )}
+            {step < 4 && (step !== 2 || date) && (
               <Button onClick={() => go(step + 1)} disabled={!canContinue}>
                 Continue <ArrowRight />
               </Button>
@@ -631,8 +683,7 @@ function StaffOption({ checked, onSelect, title, subtitle, tags, avatar }: { che
   return (
     <button
       type="button"
-      role="radio"
-      aria-checked={checked}
+      aria-pressed={checked}
       onClick={onSelect}
       className={cn(
         "flex items-center gap-4 rounded-2xl border bg-white p-4 text-left transition",
@@ -662,9 +713,7 @@ function PaymentOption({ checked, disabled, onSelect, icon, title, text }: { che
   return (
     <button
       type="button"
-      role="radio"
-      aria-checked={checked}
-      aria-disabled={disabled}
+      aria-pressed={checked && !disabled}
       disabled={disabled}
       onClick={onSelect}
       className={cn(

@@ -1,0 +1,1055 @@
+{
+  "label": "mid",
+  "base": "http://localhost:3000",
+  "at": "2026-11-16T18:25:10.357Z",
+  "pages": [
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".shadow-none"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".transition.text-charcoal\\/80.py-2:nth-child(2) > .opacity-60"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group[href=\"/\"] > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > em"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group[href=\"/\"] > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.inline-flex.flex-col > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group[href=\"/\"] > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group.flex-col > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-11"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .group.leading-none.flex-col > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > em"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "mobile",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "tablet",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".shadow-none"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 8,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".transition.text-charcoal\\/80.py-2:nth-child(2) > .opacity-60"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/services/hydra-facial",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group[href=\"/\"] > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > em"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/bridal",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group[href=\"/\"] > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.inline-flex.flex-col > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group[href=\"/\"] > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/about",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .leading-none.group.flex-col > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > .not-italic.group-hover\\:text-magenta-deep"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/contact",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 2,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".h-11"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/book",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "sample": ".lg\\:col-span-4 > .group.leading-none.flex-col > .text-\\[1\\.55rem\\].tracking-\\[0\\.02em\\].sm\\:text-\\[1\\.7rem\\] > em"
+        }
+      ]
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/login",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "visitor",
+      "viewport": "desktop",
+      "route": "/register",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "mobile",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "tablet",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/profile",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "customer",
+      "viewport": "desktop",
+      "route": "/account/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "mobile",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "tablet",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/appointments",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "staff",
+      "viewport": "desktop",
+      "route": "/staff/availability",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "mobile",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "tablet",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": []
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/bookings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/services",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/staff",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/customers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/gallery",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/offers",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/reviews",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".relative"
+        }
+      ]
+    },
+    {
+      "role": "admin",
+      "viewport": "desktop",
+      "route": "/admin/settings",
+      "status": 200,
+      "overflow": 0,
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "count": 1,
+          "help": "Elements must have their visible text as part of their accessible name",
+          "sample": ".p-2"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "color-contrast": {
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "nodes": 36,
+      "pages": [
+        "/@mobile",
+        "/services@mobile",
+        "/services/hydra-facial@mobile",
+        "/bridal@mobile",
+        "/gallery@mobile",
+        "/offers@mobile",
+        "/about@mobile",
+        "/contact@mobile",
+        "/book@mobile",
+        "/@desktop",
+        "/services@desktop",
+        "/services/hydra-facial@desktop",
+        "/bridal@desktop",
+        "/gallery@desktop",
+        "/offers@desktop",
+        "/about@desktop",
+        "/contact@desktop",
+        "/book@desktop"
+      ]
+    },
+    "label-content-name-mismatch": {
+      "impact": "serious",
+      "help": "Elements must have their visible text as part of their accessible name",
+      "nodes": 24,
+      "pages": [
+        "/staff@mobile",
+        "/staff/appointments@mobile",
+        "/staff/availability@mobile",
+        "/staff@desktop",
+        "/staff/appointments@desktop",
+        "/staff/availability@desktop",
+        "/admin@mobile",
+        "/admin/bookings@mobile",
+        "/admin/services@mobile",
+        "/admin/staff@mobile",
+        "/admin/customers@mobile",
+        "/admin/gallery@mobile",
+        "/admin/offers@mobile",
+        "/admin/reviews@mobile",
+        "/admin/settings@mobile",
+        "/admin@desktop",
+        "/admin/bookings@desktop",
+        "/admin/services@desktop",
+        "/admin/staff@desktop",
+        "/admin/customers@desktop",
+        "/admin/gallery@desktop",
+        "/admin/offers@desktop",
+        "/admin/reviews@desktop",
+        "/admin/settings@desktop"
+      ]
+    }
+  },
+  "totals": {
+    "pages": 81,
+    "axeNodes": 60,
+    "overflowPages": [],
+    "non200": []
+  }
+}

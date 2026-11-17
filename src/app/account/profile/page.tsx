@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/dashboard/shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/primitives";
 import { ChangePasswordForm, ProfileForm } from "@/components/account/profile-form";
+import { DeleteAccount } from "@/components/account/delete-account";
 import { requireCustomer } from "@/server/session";
 import { prisma } from "@/server/db";
 import { dbDateToDateKey } from "@/lib/time";
@@ -44,6 +45,15 @@ export default async function ProfilePage() {
           </CardHeader>
           <CardContent>
             <ChangePasswordForm />
+          </CardContent>
+        </Card>
+        <Card className="h-fit xl:col-start-2">
+          <CardHeader>
+            <CardTitle>Delete account</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-sm text-muted-foreground">Remove your account and personal data. Cancel any upcoming appointments first.</p>
+            <DeleteAccount />
           </CardContent>
         </Card>
       </div>

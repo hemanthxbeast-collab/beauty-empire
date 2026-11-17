@@ -7,6 +7,9 @@ import { getSalonSettings } from "@/server/services/settings";
 import { getActiveOffers } from "@/server/queries/public";
 import { addDaysToDateKey, dateKeyInTz } from "@/lib/time";
 import { toNumber } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { WhatsappIcon } from "@/components/site/icons";
+import { bookingEnquiryMessage, formatPhone, whatsappLink } from "@/lib/whatsapp";
 
 export const metadata: Metadata = {
   title: "Book an Appointment",
@@ -106,6 +109,29 @@ export default async function BookPage({ searchParams }: { searchParams: SP }) {
         : null,
     signedInAsStaff: Boolean(user && user.role !== "CUSTOMER"),
   };
+
+  // No bookable professionals yet (e.g. a fresh production install): no dead-end wizard.
+  if (staff.length === 0 || data.categories.length === 0) {
+    return (
+      <section className="min-h-[70vh] bg-ivory py-16 lg:py-24">
+        <div className="container-lux max-w-2xl text-center">
+          <p className="eyebrow">Online Booking</p>
+          <h1 className="heading-lg mt-3">Online booking opens soon</h1>
+          <p className="lead mt-5">We&apos;re setting up our appointment calendar. Until then, we&apos;d love to book you in by phone or WhatsApp.</p>
+          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+            <Button asChild>
+              <a href={whatsappLink(settings.whatsappNumber, bookingEnquiryMessage())} target="_blank" rel="noopener noreferrer">
+                <WhatsappIcon className="size-4" aria-hidden /> Book on WhatsApp
+              </a>
+            </Button>
+            <Button asChild variant="outline">
+              <a href={`tel:${settings.phone}`}>Call {formatPhone(settings.phone)}</a>
+            </Button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="min-h-[80vh] bg-ivory pb-24">

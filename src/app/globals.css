@@ -12,10 +12,15 @@
   --ivory: #fff9f7;
   --champagne: #e8d5bd;
   --charcoal: #292329;
-  --muted-rose: #a77b8d;
+  /* Text-role rose: darkened from the spec's #A77B8D (3.0–3.6:1) to pass WCAG AA on every surface (≥4.7:1). */
+  --muted-rose: #8a5a6e;
   --soft-grey: #f5f3f4;
+  /* WhatsApp action colour, darkened from #1F9D55 (3.5:1) to pass AA with white text (5.4:1). */
+  --whatsapp: #177a43;
+  --whatsapp-strong: #11603a;
 
-  --radius: 0.875rem;
+  /* Editorial, restrained corners (was 14px base / 26px cards). */
+  --radius: 0.625rem;
   --background: #ffffff;
   --foreground: var(--charcoal);
   --card: #ffffff;
@@ -32,7 +37,8 @@
   --accent-foreground: var(--magenta-deep);
   --destructive: #c0352b;
   --border: #eedde4;
-  --input: #e6d3db;
+  /* Form-control border: ≥3:1 against white (WCAG 1.4.11). */
+  --input: #a8879a;
   --ring: var(--magenta);
 }
 
@@ -49,6 +55,8 @@
   --color-charcoal: var(--charcoal);
   --color-muted-rose: var(--muted-rose);
   --color-soft-grey: var(--soft-grey);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-strong: var(--whatsapp-strong);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -72,8 +80,9 @@
   --radius-sm: calc(var(--radius) - 6px);
   --radius-md: calc(var(--radius) - 3px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 6px);
-  --radius-2xl: calc(var(--radius) + 12px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --radius-3xl: calc(var(--radius) + 6px);
 
   --shadow-soft: 0 1px 2px rgb(41 35 41 / 0.04), 0 8px 24px -12px rgb(157 20 90 / 0.12);
   --shadow-lift: 0 2px 4px rgb(41 35 41 / 0.04), 0 24px 48px -20px rgb(157 20 90 / 0.25);
@@ -174,6 +183,11 @@
       animation: none !important;
     }
   }
+  /* Links inside running text are underlined, not colour-only (WCAG 1.4.1). */
+  .link-inline {
+    @apply text-magenta underline decoration-magenta/40 underline-offset-[3px] transition-colors hover:text-magenta-deep hover:decoration-magenta;
+  }
+  .prose-lux a { @apply text-magenta underline decoration-magenta/40 underline-offset-[3px] hover:decoration-magenta; }
   .prose-lux p { @apply mb-4 leading-relaxed text-muted-foreground; }
   .prose-lux h2 { @apply mt-10 mb-3 font-serif text-2xl text-charcoal; }
   .prose-lux ul { @apply mb-4 list-disc space-y-1 pl-5 text-muted-foreground; }

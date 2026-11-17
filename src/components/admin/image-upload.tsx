@@ -49,14 +49,14 @@ export function ImageUpload({ value, onChange, folder, id }: { value: string; on
           )}
         </div>
         <div className="flex-1 space-y-2">
-          <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="sr-only" id={`${id}-file`} onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+          <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp,image/avif" className="hidden" tabIndex={-1} aria-hidden id={`${id}-file`} onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
           <Button type="button" variant="outline" size="sm" disabled={uploading} onClick={() => inputRef.current?.click()}>
             {uploading ? <Loader2 className="animate-spin" /> : <ImagePlus />} {uploading ? "Uploading…" : "Upload image"}
           </Button>
           <p className="text-xs text-muted-foreground">JPEG, PNG, WebP or AVIF · max 5 MB</p>
         </div>
       </div>
-      <Input id={id} value={value} onChange={(e) => onChange(e.target.value)} placeholder="…or paste an https://res.cloudinary.com / images.unsplash.com URL" className="h-10 text-xs" />
+      <Input id={id} aria-label="Image URL" value={value} onChange={(e) => onChange(e.target.value)} placeholder="…or paste an https://res.cloudinary.com / images.unsplash.com URL" className="h-10 text-xs" />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { NativeSelect, Textarea } from "@/components/ui/input";
 import { Field, Skeleton } from "@/components/ui/primitives";
 import { Calendar } from "@/components/booking/calendar";
+import { useSlots } from "@/components/booking/use-slots";
 import { ActionButton } from "@/components/dashboard/action-button";
 import { adminRescheduleAction, updateBookingStatusAction } from "@/server/actions/admin-ops";
 import { cn } from "@/lib/utils";
@@ -111,28 +112,9 @@ export function AdminRescheduleDialog({
   const [open, setOpen] = useState(false);
   const [staffId, setStaffId] = useState(currentStaffId);
   const [date, setDate] = useState<string | null>(null);
-  const [slots, setSlots] = useState<Array<{ minuteOfDay: number; label: string }> | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [minute, setMinute] = useState<number | null>(null);
   const [pending, setPending] = useState(false);
-
-  useEffect(() => {
-    if (!date) return;
-    setSlots(null);
-    setMinute(null);
-    setError(null);
-    const qs = new URLSearchParams({ serviceIds: serviceIds.join(","), staffId, date, exclude: appointmentId });
-    fetch(`/api/availability?${qs}`, { cache: "no-store" })
-      .then(async (r) => {
-        const b = await r.json();
-        if (!r.ok) throw new Error(b.error);
-        setSlots(b.slots);
-      })
-      .catch((e: Error) => {
-        setSlots([]);
-        setError(e.message || "Could not load availability");
-      });
-  }, [date, staffId, serviceIds, appointmentId]);
+  const { slots, error, loading, reload } = useSlots({ serviceIds, staffId, date, exclude: appointmentId, enabled: open });
 
   return (
     <Dialog open={open} onOpenChange={(o) => !pending && setOpen(o)}>
@@ -147,7 +129,14 @@ export function AdminRescheduleDialog({
         <div className="mt-6 grid gap-6 md:grid-cols-2">
           <div className="space-y-4">
             <Field label="Professional" htmlFor="rs-staff">
-              <NativeSelect id="rs-staff" value={staffId} onChange={(e) => setStaffId(e.target.value)}>
+              <NativeSelect
+                id="rs-staff"
+                value={staffId}
+                onChange={(e) => {
+                  setStaffId(e.target.value);
+                  setMinute(null);
+                }}
+              >
                 {staff.map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.name}
@@ -155,30 +144,44 @@ export function AdminRescheduleDialog({
                 ))}
               </NativeSelect>
             </Field>
-            <Calendar value={date} onChange={setDate} minDate={today} maxDate={lastDate} />
+            <Calendar
+              value={date}
+              onChange={(d) => {
+                setDate(d);
+                setMinute(null);
+              }}
+              minDate={today}
+              maxDate={lastDate}
+            />
           </div>
           <div>
             <p className="mb-3 text-sm font-medium text-charcoal">Available times</p>
             {!date && <p className="text-sm text-muted-foreground">Select a date.</p>}
-            {date && !slots && (
+            {date && loading && (
               <div className="grid grid-cols-3 gap-2">
                 {Array.from({ length: 9 }).map((_, i) => (
                   <Skeleton key={i} className="h-10 rounded-full" />
                 ))}
               </div>
             )}
-            {error && <p className="text-sm text-red-700">{error}</p>}
+            {error && (
+              <div role="alert" className="space-y-2 rounded-lg bg-red-50 p-3 text-sm text-red-800">
+                <p>{error}</p>
+                <Button size="sm" variant="outline" onClick={reload}>
+                  Try again
+                </Button>
+              </div>
+            )}
             {slots && slots.length === 0 && !error && <p className="text-sm text-muted-foreground">No conflict-free times for this professional on this date.</p>}
             {slots && slots.length > 0 && (
-              <div role="radiogroup" aria-label="Available times" className="grid max-h-80 grid-cols-3 gap-2 overflow-y-auto">
+              <div role="group" aria-label="Available times" className="grid max-h-80 grid-cols-3 gap-2 overflow-y-auto">
                 {slots.map((s) => (
                   <button
                     key={s.minuteOfDay}
                     type="button"
-                    role="radio"
-                    aria-checked={minute === s.minuteOfDay}
+                    aria-pressed={minute === s.minuteOfDay}
                     onClick={() => setMinute(s.minuteOfDay)}
-                    className={cn("h-10 rounded-full border text-xs", minute === s.minuteOfDay ? "border-magenta bg-magenta text-white" : "border-border hover:border-magenta")}
+                    className={cn("h-11 rounded-full border text-xs", minute === s.minuteOfDay ? "border-magenta bg-magenta text-white" : "border-border hover:border-magenta")}
                   >
                     {s.label}
                   </button>

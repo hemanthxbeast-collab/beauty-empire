@@ -4,7 +4,7 @@ import { PaymentBadge, StatusBadge } from "@/components/dashboard/status-badge";
 import { ActionButton } from "@/components/dashboard/action-button";
 import { StaffNotes } from "./staff-notes";
 import { updateBookingStatusAction } from "@/server/actions/admin-ops";
-import { formatInTz } from "@/lib/time";
+import { formatInTz, hasStarted } from "@/lib/time";
 import { formatDuration } from "@/lib/utils";
 import type { Prisma } from "@/generated/prisma/client";
 
@@ -28,7 +28,7 @@ export type StaffAppointment = Prisma.AppointmentGetPayload<{ select: typeof sta
 
 /** Shows only what a professional needs for the service — no email or payment amounts. */
 export function StaffAppointmentCard({ a, timeZone }: { a: StaffAppointment; timeZone: string }) {
-  const started = a.startAt.getTime() <= Date.now();
+  const started = hasStarted(a.startAt);
   const duration = a.services.reduce((s, x) => s + x.durationMinutes, 0);
   return (
     <article className="rounded-2xl border border-border bg-white p-5">

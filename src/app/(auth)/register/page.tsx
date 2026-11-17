@@ -93,11 +93,11 @@ export default function RegisterPage() {
             <Checkbox className="mt-0.5" {...form.register("acceptTerms")} aria-invalid={!!errors.acceptTerms || undefined} />
             <span>
               I agree to the{" "}
-              <Link href="/terms" className="text-magenta hover:underline" target="_blank">
+              <Link href="/terms" className="link-inline" target="_blank">
                 Terms
               </Link>{" "}
               and{" "}
-              <Link href="/privacy-policy" className="text-magenta hover:underline" target="_blank">
+              <Link href="/privacy-policy" className="link-inline" target="_blank">
                 Privacy Policy
               </Link>
               .
@@ -115,7 +115,7 @@ export default function RegisterPage() {
       </form>
       <p className="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-magenta hover:underline">
+        <Link href="/login" className="link-inline font-medium">
           Sign in
         </Link>
       </p>

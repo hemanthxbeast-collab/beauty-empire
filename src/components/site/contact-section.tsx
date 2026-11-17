@@ -86,7 +86,7 @@ export function ContactSection({ settings, address, heading = true }: { settings
                   <p className="font-serif text-lg">Prefer WhatsApp?</p>
                   <p className="mt-2 text-sm text-white/70">Message us for quick questions, bridal enquiries or same-day availability.</p>
                 </div>
-                <Button asChild className="mt-6 bg-[#1f9d55] shadow-none hover:bg-[#188a4a]">
+                <Button asChild className="mt-6 bg-whatsapp shadow-none hover:bg-whatsapp-strong">
                   <a href={whatsappLink(settings.whatsappNumber, bookingEnquiryMessage())} target="_blank" rel="noopener noreferrer">
                     <WhatsappIcon className="size-4" /> Chat on WhatsApp
                   </a>

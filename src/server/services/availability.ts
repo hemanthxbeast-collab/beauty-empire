@@ -9,6 +9,8 @@ import type { Prisma } from "@/generated/prisma/client";
 
 /** Unpaid online-payment bookings hold a slot only for this long. */
 export const PAYMENT_HOLD_MINUTES = 30;
+/** Cancellation reason used when an unpaid online booking's hold expires (lets a late payment reinstate it). */
+export const HOLD_EXPIRED_REASON = "Online payment was not completed in time.";
 
 export async function releaseExpiredPaymentHolds(client: Prisma.TransactionClient | typeof prisma = prisma) {
   const cutoff = new Date(Date.now() - PAYMENT_HOLD_MINUTES * 60_000);
@@ -22,7 +24,7 @@ export async function releaseExpiredPaymentHolds(client: Prisma.TransactionClien
     data: {
       status: "CANCELLED",
       cancelledAt: new Date(),
-      cancellationReason: "Online payment was not completed in time.",
+      cancellationReason: HOLD_EXPIRED_REASON,
     },
   });
   return result.count;

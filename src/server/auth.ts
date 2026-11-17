@@ -7,7 +7,7 @@ import { prisma } from "@/server/db";
 import { env } from "@/server/env";
 import { sendEmail } from "@/server/email/send";
 import { resetPasswordTemplate, verifyEmailTemplate } from "@/server/email/templates";
-import { passwordSchema, phoneSchema } from "@/lib/validations/auth";
+import { nameSchema, passwordSchema, phoneSchema } from "@/lib/validations/auth";
 
 
 export const auth = betterAuth({
@@ -45,6 +45,24 @@ export const auth = betterAuth({
   },
 
   user: {
+    // Customers can erase their account (password re-entry required by Better Auth).
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user) => {
+        const u = await prisma.user.findUnique({ where: { id: user.id }, select: { role: true, customerProfile: { select: { id: true } } } });
+        if (u?.role !== "CUSTOMER") throw new APIError("FORBIDDEN", { message: "Staff and admin accounts are removed by the salon." });
+        const profileId = u.customerProfile?.id;
+        if (!profileId) return;
+        const upcoming = await prisma.appointment.count({ where: { customerId: profileId, status: { in: ["PENDING", "CONFIRMED"] }, endAt: { gte: new Date() } } });
+        if (upcoming > 0) throw new APIError("BAD_REQUEST", { message: "Please cancel your upcoming appointments before deleting your account." });
+        // Keep past bookings for accounting, but remove the personal contact details from them.
+        await prisma.appointment.updateMany({
+          where: { customerId: profileId },
+          data: { customerName: "Deleted customer", customerEmail: `deleted+${profileId}@invalid.local`, customerPhone: "+910000000000", notes: null, specialRequirements: null },
+        });
+        await prisma.notification.deleteMany({ where: { userId: user.id } });
+      },
+    },
     additionalFields: {
       role: { type: "string", required: false, defaultValue: "CUSTOMER", input: false },
       phone: { type: "string", required: false, input: true },
@@ -93,6 +111,17 @@ export const auth = betterAuth({
         }
         if (!body?.name || body.name.trim().length < 2 || body.name.length > 120) {
           throw new APIError("BAD_REQUEST", { message: "Please enter your full name" });
+        }
+      }
+      // Better Auth's built-in profile endpoint must obey the same rules as the app's own profile form.
+      if (ctx.path === "/update-user") {
+        const body = (ctx.body ?? {}) as Record<string, unknown>;
+        if ("image" in body) throw new APIError("BAD_REQUEST", { message: "Profile images cannot be changed here." });
+        if (body.name !== undefined && !nameSchema.safeParse(body.name).success) throw new APIError("BAD_REQUEST", { message: "Please enter a valid full name" });
+        if (body.phone !== undefined) {
+          const ph = phoneSchema.safeParse(body.phone);
+          if (!ph.success) throw new APIError("BAD_REQUEST", { message: "Enter a valid 10-digit Indian mobile number" });
+          body.phone = ph.data;
         }
       }
       if (ctx.path === "/reset-password" || ctx.path === "/change-password") {

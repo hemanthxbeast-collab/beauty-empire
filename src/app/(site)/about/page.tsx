@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const VALUES = [
   { icon: Heart, title: "Personal, always", text: "No two guests are alike. We listen first, then tailor every detail." },
-  { icon: ShieldCheck, title: "Uncompromising hygiene", text: "Hospital-grade sterilisation, fresh linen and single-use consumables." },
+  { icon: ShieldCheck, title: "Uncompromising hygiene", text: "Sterilised tools, fresh linen and single-use consumables for every guest." },
   { icon: Leaf, title: "Thoughtful products", text: "Professional formulations chosen for performance and skin health." },
   { icon: Sparkles, title: "Quiet luxury", text: "A calm, beautiful space where you can truly switch off." },
 ];
@@ -44,15 +44,15 @@ export default async function AboutPage() {
           </Reveal>
           <Reveal delay={0.1}>
             <p className="eyebrow">Our Story</p>
-            <h2 className="heading-lg mt-4">A decade of artistry, one guest at a time</h2>
+            <h2 className="heading-lg mt-4">Artistry, one guest at a time</h2>
             <div className="prose-lux mt-6">
               <p>
-                What began as a small bridal studio has grown into a full-service beauty destination. Through every season, one thing
-                hasn&apos;t changed — our belief that great beauty starts with genuinely understanding the person in the chair.
+                Beauty Empire is built on one belief: great beauty starts with genuinely understanding the person in the chair. Every
+                visit begins with a conversation about your skin, your hair, your plans and how you want to feel.
               </p>
               <p>
-                Today our team of specialists brings together skin science, hair craftsmanship and bridal artistry under one roof, with
-                the warmth and attention to detail that our guests return for.
+                Skin care, hair, nails, lashes and bridal artistry sit under one roof, so you can plan everything from a monthly facial
+                to a complete wedding look with the same team.
               </p>
             </div>
           </Reveal>
@@ -77,7 +77,7 @@ export default async function AboutPage() {
       {staff.length > 0 && (
         <section className="bg-white py-24">
           <div className="container-lux">
-            <SectionHeading eyebrow="Our Team" title="Meet the specialists" description="Experienced, certified and passionate about their craft." />
+            <SectionHeading eyebrow="Our Team" title="Meet the specialists" description="The people who will look after you." />
             <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {staff.map((s, i) => (
                 <Reveal key={s.id} delay={(i % 5) * 0.05} className="rounded-2xl border border-border bg-white p-6 text-center">

@@ -12,8 +12,23 @@ export async function getDashboardData(timeZone: string) {
   const monthsAgo6 = zonedToUtc(addDaysToDateKey(today, -183), 0, timeZone);
   const days30 = zonedToUtc(addDaysToDateKey(today, -29), 0, timeZone);
 
-  const [total, todayCount, byStatus, customers, revenue, recent, popular, apptsForWeeks, paymentsForMonths, created30, pendingReschedules, newMessages, pendingReviews] =
+  const [todaySchedule, total, todayCount, byStatus, customers, revenue, recent, popular, apptsForWeeks, paymentsForMonths, created30, pendingReschedules, newMessages, pendingReviews] =
     await Promise.all([
+      prisma.appointment.findMany({
+        where: { startAt: { gte: dayStart, lt: dayEnd }, status: { in: ["PENDING", "CONFIRMED", "COMPLETED", "NO_SHOW"] } },
+        orderBy: { startAt: "asc" },
+        select: {
+          id: true,
+          reference: true,
+          customerName: true,
+          startAt: true,
+          endAt: true,
+          status: true,
+          paymentStatus: true,
+          staff: { select: { user: { select: { name: true } } } },
+          services: { select: { serviceName: true }, orderBy: { sortOrder: "asc" } },
+        },
+      }),
       prisma.appointment.count(),
       prisma.appointment.count({ where: { startAt: { gte: dayStart, lt: dayEnd }, status: { in: ["PENDING", "CONFIRMED", "COMPLETED"] } } }),
       prisma.appointment.groupBy({ by: ["status"], _count: { _all: true } }),
@@ -92,5 +107,6 @@ export async function getDashboardData(timeZone: string) {
     popular: popular.map((p) => ({ label: p.serviceName, value: p._count._all })),
     trend,
     recent,
+    todaySchedule,
   };
 }

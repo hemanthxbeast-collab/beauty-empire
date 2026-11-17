@@ -1,0 +1,57 @@
+feature,area,priority,original,clone,notes
+Landing page with hero / services / bridal / gallery / offers / reviews / contact,public site,must,yes,partial,works; contains invented claims (45+ / 10+ years / hundreds of five-star / 5.0 fallback)
+Premium editorial visual design (Bodoni + Inter; magenta accent),public site,must,yes,partial,good base; contrast failures and over-rounded/pink decorative blobs
+About page,public site,should,yes,partial,fabricated history copy ("a decade")
+Services list with search / category filter / price sort,public site,must,yes,yes,
+Service detail page with price / duration / specialists,public site,must,yes,yes,
+Bridal Studio page with packages and consultation CTA,public site,must,yes,yes,
+Gallery with category filter and lightbox (admin managed),public site,must,yes,yes,
+Offers page (admin managed with validity),public site,must,yes,yes,
+Approved-only testimonials,public site,must,yes,yes,
+Instagram / social showcase,public site,could,yes,partial,links to generic instagram.com by default; invented handle
+Contact page with map / hours / WhatsApp / form,public site,must,yes,yes,
+Footer with links / policies / contact,public site,must,yes,yes,
+Floating WhatsApp button with prefilled message,public site,must,yes,yes,
+Booking: select multiple services,booking,must,yes,yes,
+Booking: choose professional or no preference,booking,must,yes,yes,
+Booking: calendar disables past / closed / unavailable days,booking,must,yes,yes,fixed in previous session for no-preference
+Booking: only available slots shown (hours / staff schedule / leave / overlap),booking,must,yes,yes,
+Booking: double booking impossible under concurrency,booking,must,yes,yes,advisory lock + exclusion constraint; integration-tested
+Booking: duplicate submission safe,booking,must,yes,no,same customer can be booked twice with 'no preference'
+Booking: customer details and notes,booking,must,yes,yes,
+Booking: pay at salon,booking,must,yes,yes,
+Booking: optional Razorpay payment verified server-side,payments,should,yes,partial,late payment on cancelled booking marked PAID
+Booking confirmation with reference / breakdown / WhatsApp,booking,must,yes,yes,
+Add to calendar (.ics),booking,could,no,no,not in spec; retention idea
+Confirmation / cancellation / reschedule / reminder emails,notifications,must,yes,yes,dev outbox without Resend
+Customer: register / login / logout / verify email,auth,must,yes,yes,
+Customer: forgot / reset password,auth,must,yes,yes,
+Strong password policy and rate limiting,security,must,yes,yes,
+Customer: upcoming / past / history / status / payment status,account,must,yes,yes,
+Customer: cancel per policy,account,must,yes,partial,paid bookings stay PAID with no refund flag
+Customer: request reschedule,account,must,yes,partial,cannot pick slots overlapping own current booking
+Customer: reviews for completed appointments,account,must,yes,yes,
+Customer: profile and saved preferences,account,must,yes,yes,
+Staff: today / upcoming / customer info / complete / notes,staff,must,yes,yes,
+Staff: manage own availability and leave,staff,must,yes,partial,page overflows horizontally on mobile and desktop
+Staff blocked from admin operations,security,must,yes,yes,
+Admin: KPIs and charts,admin,must,yes,yes,
+Admin: today's schedule view,admin,should,no,no,operations gap
+Admin: booking search / filter / confirm / reject / cancel / complete / reschedule / assign,admin,must,yes,yes,
+Admin: record salon payment and refund,admin,should,yes,yes,
+Admin: services / packages / categories / discounts,admin,must,yes,yes,
+Admin: staff accounts / services / hours / leave,admin,must,yes,yes,
+Admin: customers / history / disable / enquiries,admin,must,yes,yes,
+Admin: gallery / offers / reviews moderation,admin,must,yes,yes,
+Admin: settings (hours / policies / payments / social),admin,must,yes,yes,
+Audit log of admin actions,security,must,yes,yes,
+Image upload with type/size validation,security,must,yes,yes,magic-byte sniffing
+Security headers / CSP / CSRF / ownership checks,security,must,yes,yes,CSP uses unsafe-inline (documented)
+WCAG AA accessibility,quality,must,yes,partial,398 contrast + 210 name-mismatch nodes and markup issues (axe)
+Responsive at 390 / 768 / 1440,quality,must,yes,partial,staff availability overflow
+Loading / empty / error states,quality,must,yes,partial,empty + error yes; no route loading states
+SEO: metadata / OG / sitemap / robots / JSON-LD,seo,must,yes,partial,aggregateRating fed by seeded demo reviews
+Production-safe seed (no fictional staff),deployment,must,yes,no,seed creates five fictional staff in production
+Linting,quality,should,yes,no,no ESLint config at baseline
+Unit / integration / E2E tests,quality,must,yes,yes,58 Vitest + 29 Playwright
+Real salon content (photos / address / staff),content,must,yes,skip,client must supply

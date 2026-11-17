@@ -31,7 +31,6 @@ export function Footer({ settings, categories }: Props) {
 
   return (
     <footer className="relative overflow-hidden bg-charcoal text-white/80">
-      <div aria-hidden className="pointer-events-none absolute -top-40 -right-40 size-[28rem] rounded-full bg-magenta/20 blur-[120px]" />
       <div className="container-lux relative grid gap-12 py-20 md:grid-cols-2 lg:grid-cols-12">
         <div className="lg:col-span-4">
           <Logo light />

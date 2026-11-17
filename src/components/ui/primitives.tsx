@@ -48,9 +48,10 @@ export function Skeleton({ className }: { className?: string }) {
 }
 
 // ── Table ──
-export function Table({ className, ...props }: React.ComponentProps<"table">) {
+export function Table({ className, label = "Table", ...props }: React.ComponentProps<"table"> & { label?: string }) {
   return (
-    <div className="relative w-full overflow-x-auto rounded-2xl border border-border bg-white">
+    // Focusable so keyboard users can scroll wide tables on small screens (WCAG 2.1.1).
+    <div role="region" aria-label={label} tabIndex={0} className="relative w-full overflow-x-auto rounded-2xl border border-border bg-white focus-visible:outline-2 focus-visible:outline-magenta">
       <table className={cn("w-full caption-bottom text-sm", className)} {...props} />
     </div>
   );
@@ -100,7 +101,7 @@ export function Field({
         {label}
         {required && <span className="ml-0.5 text-magenta" aria-hidden>*</span>}
       </label>
-      {children}
+      {linkDescription(children, htmlFor, error, hint)}
       {error ? (
         <p id={`${htmlFor}-error`} role="alert" className="text-[0.8rem] text-destructive">
           {error}
@@ -112,6 +113,26 @@ export function Field({
       ) : null}
     </div>
   );
+}
+
+/** Adds aria-describedby / aria-invalid to the field's control so errors and hints are announced. */
+function linkDescription(children: React.ReactNode, id: string, error?: string, hint?: string) {
+  if (!error && !hint) return children;
+  const link = (el: React.ReactElement<Record<string, unknown>>) =>
+    React.cloneElement(el, {
+      "aria-describedby": [el.props["aria-describedby"], error ? `${id}-error` : `${id}-hint`].filter(Boolean).join(" "),
+      ...(error ? { "aria-invalid": true } : {}),
+    });
+  if (React.isValidElement(children)) return link(children as React.ReactElement<Record<string, unknown>>);
+  // Several children (e.g. password input + strength meter): link the first element, which is the control.
+  let done = false;
+  return React.Children.map(children, (child) => {
+    if (!done && React.isValidElement(child)) {
+      done = true;
+      return link(child as React.ReactElement<Record<string, unknown>>);
+    }
+    return child;
+  });
 }
 
 // ── Empty state ──

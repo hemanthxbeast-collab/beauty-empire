@@ -26,9 +26,10 @@ import {
   getFeaturedServices,
   getGalleryImages,
   getInstagramImages,
+  getPublicStaff,
   getReviewStats,
 } from "@/server/queries/public";
-import { getSalonSettings, fullAddress } from "@/server/services/settings";
+import { getSalonSettings, fullAddress, instagramHandle, todayHoursLabel } from "@/server/services/settings";
 import { absoluteUrl } from "@/lib/utils";
 
 export const metadata = {
@@ -37,18 +38,18 @@ export const metadata = {
 };
 
 const WHY = [
-  { icon: UserRoundCheck, title: "Experienced professionals", text: "Certified artists and therapists with years of salon and bridal expertise." },
+  { icon: UserRoundCheck, title: "Specialists for every service", text: "Skin, hair, nails, lashes and bridal work, each with its own dedicated professional." },
   { icon: HeartHandshake, title: "Personal consultations", text: "Every service begins with understanding your skin, hair and style." },
-  { icon: Gem, title: "Premium-quality products", text: "Professional, dermatologist-trusted brands — never compromised." },
+  { icon: Gem, title: "Premium-quality products", text: "Professional, salon-grade products chosen for your skin and hair type." },
   { icon: ShieldCheck, title: "Hygienic environment", text: "Sterilised tools, fresh linen and single-use consumables for every guest." },
   { icon: Flower2, title: "Relaxing atmosphere", text: "A calm, elegant space designed for you to slow down and unwind." },
   { icon: Award, title: "Professional bridal services", text: "Trials, timelines and on-the-day artistry for flawless bridal looks." },
   { icon: BadgeIndianRupee, title: "Transparent pricing", text: "Clear starting prices online — no surprises at the counter." },
-  { icon: Sparkles, title: "Customer satisfaction", text: "Loved by our guests, with hundreds of five-star experiences." },
+  { icon: Sparkles, title: "Honest reviews", text: "Only guests who completed an appointment can review us, and every review is shown as written." },
 ];
 
 export default async function HomePage() {
-  const [settings, categories, featured, offers, reviews, stats, gallery, insta] = await Promise.all([
+  const [settings, categories, featured, offers, reviews, stats, gallery, insta, staff] = await Promise.all([
     getSalonSettings(),
     getCategories(),
     getFeaturedServices(8),
@@ -57,7 +58,11 @@ export default async function HomePage() {
     getReviewStats(),
     getGalleryImages(),
     getInstagramImages(6),
+    getPublicStaff(),
   ]);
+  const serviceCount = categories.reduce((sum, c) => sum + c._count.services, 0);
+  const today = todayHoursLabel(settings);
+  const igHandle = instagramHandle(settings.instagramUrl);
 
   // Interleave gallery categories so the preview shows the full range of work.
   const byCategory = new Map<string, typeof gallery>();
@@ -84,7 +89,6 @@ export default async function HomePage() {
       postalCode: settings.postalCode,
       addressCountry: "IN",
     },
-    ...(stats.count > 0 ? { aggregateRating: { "@type": "AggregateRating", ratingValue: stats.average.toFixed(1), reviewCount: stats.count } } : {}),
   };
 
   return (
@@ -93,8 +97,6 @@ export default async function HomePage() {
 
       {/* ───────── 1. HERO ───────── */}
       <section className="relative overflow-hidden bg-ivory">
-        <div aria-hidden className="pointer-events-none absolute top-0 -left-40 size-[36rem] rounded-full bg-blush/80 blur-[100px]" />
-        <div aria-hidden className="pointer-events-none absolute right-0 bottom-0 size-[28rem] rounded-full bg-champagne/40 blur-[110px]" />
         <div className="container-lux relative grid items-center gap-14 pt-10 pb-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pt-14 lg:pb-28">
           <div>
             <FadeIn>
@@ -126,22 +128,42 @@ export default async function HomePage() {
                 <Link href="/services">Explore Our Services</Link>
               </Button>
             </FadeIn>
-            <FadeIn delay={0.4} className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-5 border-t border-rose/50 pt-8">
-              <div>
-                <p className="font-serif text-3xl text-charcoal">
-                  {stats.count > 0 ? stats.average.toFixed(1) : "5.0"}
-                  <Star aria-hidden className="ml-1 inline size-5 -translate-y-1 fill-magenta text-magenta" />
-                </p>
-                <p className="text-xs tracking-wide text-muted-foreground">Guest rating</p>
-              </div>
-              <div>
-                <p className="font-serif text-3xl text-charcoal">{featured.length ? "45+" : "—"}</p>
-                <p className="text-xs tracking-wide text-muted-foreground">Signature services</p>
-              </div>
-              <div>
-                <p className="font-serif text-3xl text-charcoal">10+</p>
-                <p className="text-xs tracking-wide text-muted-foreground">Years of artistry</p>
-              </div>
+            {/* Facts only — every figure comes from the database or settings. */}
+            <FadeIn delay={0.4} className="mt-12 border-t border-rose/50 pt-7">
+              <dl className="flex flex-wrap gap-x-10 gap-y-5">
+                {stats.count > 0 && (
+                  <div>
+                    <dt className="text-xs tracking-wide text-muted-foreground">Guest rating · {stats.count} verified {stats.count === 1 ? "review" : "reviews"}</dt>
+                    <dd className="mt-1 font-serif text-3xl text-charcoal">
+                      {stats.average.toFixed(1)}
+                      <Star aria-hidden className="ml-1 inline size-5 -translate-y-1 fill-magenta text-magenta" />
+                      <span className="sr-only"> out of 5</span>
+                    </dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="text-xs tracking-wide text-muted-foreground">Services</dt>
+                  <dd className="mt-1 font-serif text-3xl text-charcoal">{serviceCount}</dd>
+                </div>
+                {staff.length > 0 && (
+                  <div>
+                    <dt className="text-xs tracking-wide text-muted-foreground">Specialists</dt>
+                    <dd className="mt-1 font-serif text-3xl text-charcoal">{staff.length}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt className="text-xs tracking-wide text-muted-foreground">{today.open ? "Open today" : "Today"}</dt>
+                  <dd className="mt-2 text-sm font-medium text-charcoal">{today.label}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs tracking-wide text-muted-foreground">Find us</dt>
+                  <dd className="mt-2 text-sm font-medium">
+                    <a href="#contact" className="link-inline">
+                      {[settings.addressLine2, settings.city].filter(Boolean).join(", ")}
+                    </a>
+                  </dd>
+                </div>
+              </dl>
             </FadeIn>
           </div>
 
@@ -159,11 +181,13 @@ export default async function HomePage() {
             <div className="absolute right-0 bottom-10 aspect-[3/4] w-[44%] overflow-hidden rounded-3xl border-[6px] border-white shadow-lift">
               <Image src={unsplash(IMG.heroFacial, 600)} alt="Client relaxing during a facial treatment" fill sizes="20vw" className="object-cover" />
             </div>
-            <div className="absolute top-10 -right-2 rounded-2xl border border-border bg-white/95 px-5 py-4 shadow-soft backdrop-blur sm:right-4">
-              <p className="font-serif text-lg text-charcoal">Bridal Studio</p>
-              <p className="text-xs text-muted-foreground">Trials &amp; consultations</p>
-            </div>
-            <div aria-hidden className="absolute -bottom-6 left-6 hidden h-24 w-24 rounded-full border border-magenta/30 sm:block" />
+            <Link
+              href="/bridal"
+              className="absolute top-10 -right-2 rounded-xl border border-border bg-white px-5 py-4 shadow-soft transition hover:border-rose sm:right-4"
+            >
+              <span className="block font-serif text-lg text-charcoal">Bridal Studio</span>
+              <span className="block text-xs text-muted-foreground">Trials &amp; consultations →</span>
+            </Link>
           </FadeIn>
         </div>
       </section>
@@ -180,9 +204,9 @@ export default async function HomePage() {
                 <div className="relative aspect-square overflow-hidden rounded-2xl">
                   <Image src={unsplash(IMG.serum, 600)} alt="Premium skincare serum" fill sizes="20vw" className="object-cover" />
                 </div>
-                <div className="rounded-2xl bg-blush p-5">
-                  <p className="font-serif text-4xl text-magenta">10+</p>
-                  <p className="mt-1 text-xs leading-snug text-magenta-deep">years of beauty &amp; bridal artistry</p>
+                <div className="rounded-xl bg-blush p-5">
+                  <p className="font-serif text-4xl text-magenta-deep">{categories.length}</p>
+                  <p className="mt-1 text-xs leading-snug text-magenta-deep">beauty disciplines under one roof</p>
                 </div>
               </div>
             </div>
@@ -247,27 +271,74 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ───────── 3b. HOW BOOKING WORKS ───────── */}
+      <section aria-labelledby="how-heading" className="border-y border-border bg-white py-16 lg:py-20">
+        <div className="container-lux grid gap-10 lg:grid-cols-[0.7fr_1.3fr] lg:items-center">
+          <div>
+            <p className="eyebrow">Online booking</p>
+            <h2 id="how-heading" className="heading-md mt-3">
+              Book in about a minute
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">Live availability, no phone calls. Pay at the salon{settings.onlinePaymentsEnabled ? " or online" : ""}.</p>
+          </div>
+          <ol className="grid gap-6 sm:grid-cols-3">
+            {[
+              ["Choose your services", "Combine as many as you like; we schedule them back-to-back."],
+              ["Pick a professional & time", "See only real free slots, or let us match you with the first available expert."],
+              ["Confirm", "Get a booking reference by email, add it to your calendar, manage it any time."],
+            ].map(([t, d], i) => (
+              <li key={t} className="border-t-2 border-magenta pt-4">
+                <span className="font-serif text-sm text-muted-rose" aria-hidden>
+                  0{i + 1}
+                </span>
+                <h3 className="mt-1 font-serif text-xl text-charcoal">{t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div className="container-lux mt-10">
+          <Button asChild>
+            <Link href="/book">
+              Start booking <ArrowRight />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
       {/* ───────── 4. WHY CHOOSE US ───────── */}
       <section className="bg-white py-24 lg:py-32">
-        <div className="container-lux">
-          <SectionHeading eyebrow="Why Choose Us" title="The Beauty Empire difference" description="Thoughtful details that make every visit feel effortless and indulgent." />
-          <div className="mt-16 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+        <div className="container-lux grid gap-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+          <Reveal className="lg:sticky lg:top-32 lg:self-start">
+            <p className="eyebrow">Why Beauty Empire</p>
+            <h2 className="heading-lg mt-4 text-balance">The details that make a visit feel effortless</h2>
+            <p className="lead mt-5">Thoughtful care at every step, from the first consultation to the final touch.</p>
+            <Button asChild variant="outline" className="mt-8">
+              <Link href="/about">Meet the team</Link>
+            </Button>
+          </Reveal>
+          <ol className="grid gap-x-10 sm:grid-cols-2">
             {WHY.map(({ icon: Icon, title, text }, i) => (
-              <Reveal key={title} delay={(i % 4) * 0.05} className="group bg-white p-8 transition-colors duration-500 hover:bg-ivory">
-                <span className="flex size-12 items-center justify-center rounded-full bg-blush text-magenta transition-transform duration-500 group-hover:scale-110">
-                  <Icon className="size-5" aria-hidden />
-                </span>
-                <h3 className="mt-6 font-serif text-xl text-charcoal">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
-              </Reveal>
+              <li key={title} className="border-t border-border py-7">
+                <div className="flex items-baseline gap-4">
+                  <span className="font-serif text-sm text-muted-rose tabular-nums" aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3 className="flex items-center gap-2 font-serif text-xl text-charcoal">
+                      <Icon className="size-4 text-magenta" aria-hidden /> {title}
+                    </h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{text}</p>
+                  </div>
+                </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
       {/* ───────── 5. BRIDAL STUDIO ───────── */}
       <section className="relative overflow-hidden bg-charcoal py-24 text-white lg:py-32">
-        <div aria-hidden className="pointer-events-none absolute -top-32 left-1/3 size-[30rem] rounded-full bg-magenta/25 blur-[140px]" />
         <div className="container-lux relative grid items-center gap-14 lg:grid-cols-2 lg:gap-20">
           <Reveal>
             <p className="eyebrow !text-rose">The Bridal Studio</p>
@@ -306,6 +377,7 @@ export default async function HomePage() {
       </section>
 
       {/* ───────── 6. GALLERY PREVIEW ───────── */}
+      {galleryPreview.length > 0 && (
       <section className="bg-white py-24 lg:py-32">
         <div className="container-lux">
           <SectionHeading
@@ -342,6 +414,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* ───────── 7. OFFERS ───────── */}
       {offers.length > 0 && (
@@ -372,7 +445,7 @@ export default async function HomePage() {
           <div className="container-lux">
             <SectionHeading
               eyebrow="Kind Words"
-              title="Loved by our guests"
+              title="What our guests say"
               description={stats.count ? `Rated ${stats.average.toFixed(1)} out of 5 from ${stats.count} verified reviews.` : undefined}
             />
             <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -387,10 +460,10 @@ export default async function HomePage() {
       )}
 
       {/* ───────── 9. INSTAGRAM ───────── */}
-      {insta.length > 0 && (
+      {insta.length > 0 && settings.instagramUrl && (
         <section className="bg-blush/50 py-24">
           <div className="container-lux">
-            <SectionHeading eyebrow="@beautyempire" title="Follow our story" description="Fresh looks, behind-the-scenes moments and beauty inspiration." />
+            <SectionHeading eyebrow={igHandle ?? "Instagram"} title="Follow our story" description="Fresh looks, behind-the-scenes moments and beauty inspiration." />
             <div className="mt-12 grid grid-cols-3 gap-2 sm:gap-4 lg:grid-cols-6">
               {insta.map((img) => (
                 <a

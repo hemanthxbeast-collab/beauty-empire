@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Info } from "lucide-react";
+import { ArrowLeft, CalendarPlus, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge, Card, CardContent, CardHeader, CardTitle } from "@/components/ui/primitives";
 import { PaymentBadge, StatusBadge } from "@/components/dashboard/status-badge";
@@ -130,12 +130,22 @@ export default async function AppointmentDetailPage({ params }: { params: Promis
               )}
               <Button asChild variant="ghost">
                 <a href={whatsappLink(settings.whatsappNumber, `Hello Beauty Empire! About my booking ${appt.reference}:`)} target="_blank" rel="noopener noreferrer">
-                  <WhatsappIcon className="size-4 text-[#1f9d55]" /> Message the salon
+                  <WhatsappIcon className="size-4 text-whatsapp" /> Message the salon
                 </a>
               </Button>
-              {!active && appt.status !== "COMPLETED" && (
+              {active && (
+                <Button asChild variant="ghost">
+                  <a href={`/api/bookings/${appt.reference}/calendar`} download>
+                    <CalendarPlus aria-hidden /> Add to calendar
+                  </a>
+                </Button>
+              )}
+              {!active && (
                 <Button asChild>
-                  <Link href={`/book?${appt.services.map((s) => `service=${s.serviceId}`).join("&")}`}>Book again</Link>
+                  {/* Rebook the same services (and professional, if they still offer them) in one click. */}
+                  <Link href={`/book?${appt.services.map((s) => `service=${s.serviceId}`).join("&")}&staff=${appt.staff.id}`}>
+                    {appt.status === "COMPLETED" ? "Book these services again" : "Book again"}
+                  </Link>
                 </Button>
               )}
             </CardContent>

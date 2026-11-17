@@ -49,13 +49,13 @@ export function ServiceCard({ service, priority }: { service: ServiceCardData; p
         </div>
         <div className="mt-5 grid grid-cols-2 gap-2.5">
           <Button asChild variant="outline" size="sm">
-            <Link href={`/services/${service.slug}`} aria-label={`View details for ${service.name}`}>
-              View Details
+            <Link href={`/services/${service.slug}`}>
+              View Details<span className="sr-only">: {service.name}</span>
             </Link>
           </Button>
           <Button asChild size="sm">
-            <Link href={`/book?service=${service.id}`} aria-label={`Book ${service.name}`}>
-              Book Now
+            <Link href={`/book?service=${service.id}`}>
+              Book Now<span className="sr-only">: {service.name}</span>
             </Link>
           </Button>
         </div>
@@ -97,7 +97,7 @@ export function OfferCard({ offer }: { offer: OfferCardData }) {
           </p>
           <Button asChild className="mt-5 w-full">
             <Link href={`/book?offer=${offer.id}`}>
-              Book Now <ArrowUpRight />
+              Book Now<span className="sr-only">: {offer.title}</span> <ArrowUpRight aria-hidden />
             </Link>
           </Button>
         </div>

@@ -91,7 +91,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
                 </Button>
                 <Button asChild size="lg" variant="outline">
                   <a href={whatsappLink(settings.whatsappNumber, bookingEnquiryMessage(s.name))} target="_blank" rel="noopener noreferrer">
-                    <WhatsappIcon className="size-4 text-[#1f9d55]" /> Enquire on WhatsApp
+                    <WhatsappIcon className="size-4 text-whatsapp" /> Enquire on WhatsApp
                   </a>
                 </Button>
               </div>

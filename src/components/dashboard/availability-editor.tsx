@@ -28,14 +28,14 @@ export function AvailabilityEditor({ staffId, initial }: { staffId?: string; ini
           const i = days.findIndex((d) => d.dayOfWeek === dow);
           const d = days[i]!;
           return (
-            <li key={dow} className="flex flex-wrap items-center gap-4 px-5 py-3.5">
-              <span className="w-28 text-sm font-medium text-charcoal">{DAY_NAMES[dow]}</span>
+            <li key={dow} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3.5 sm:px-5">
+              <span className="w-24 text-sm font-medium text-charcoal">{DAY_NAMES[dow]}</span>
               <Switch checked={d.isAvailable} onCheckedChange={(v) => update(i, { isAvailable: v })} aria-label={`Working on ${DAY_NAMES[dow]}`} />
               {d.isAvailable ? (
-                <div className="flex items-center gap-2 text-sm">
-                  <Input type="time" step={900} value={d.start} onChange={(e) => update(i, { start: e.target.value })} className="h-10 w-32" aria-label={`${DAY_NAMES[dow]} start`} />
+                <div className="flex min-w-0 flex-1 basis-56 items-center gap-2 text-sm">
+                  <Input type="time" step={900} value={d.start} onChange={(e) => update(i, { start: e.target.value })} className="h-11 min-w-0 flex-1 px-3" aria-label={`${DAY_NAMES[dow]} start`} />
                   <span className="text-muted-foreground">to</span>
-                  <Input type="time" step={900} value={d.end} onChange={(e) => update(i, { end: e.target.value })} className="h-10 w-32" aria-label={`${DAY_NAMES[dow]} end`} />
+                  <Input type="time" step={900} value={d.end} onChange={(e) => update(i, { end: e.target.value })} className="h-11 min-w-0 flex-1 px-3" aria-label={`${DAY_NAMES[dow]} end`} />
                 </div>
               ) : (
                 <span className="text-sm text-muted-foreground">Day off</span>
@@ -74,7 +74,7 @@ export function LeaveManager({ staffId, leaves }: { staffId?: string; leaves: Ar
   return (
     <div className="space-y-5">
       <form
-        className="grid gap-3 rounded-2xl border border-border bg-white p-5 sm:grid-cols-[1fr_1fr_1.5fr_auto] sm:items-end"
+        className="grid gap-3 rounded-xl border border-border bg-white p-4 sm:grid-cols-2 sm:items-end sm:p-5"
         onSubmit={async (e) => {
           e.preventDefault();
           setPending(true);
@@ -95,7 +95,7 @@ export function LeaveManager({ staffId, leaves }: { staffId?: string; leaves: Ar
         <Field label="To" htmlFor="lv-end">
           <Input id="lv-end" type="date" value={end} min={start} onChange={(e) => setEnd(e.target.value)} className="h-10" />
         </Field>
-        <Field label="Reason (optional)" htmlFor="lv-reason">
+        <Field label="Reason (optional)" htmlFor="lv-reason" className="sm:col-span-2">
           <Input id="lv-reason" maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} className="h-10" />
         </Field>
         <Button type="submit" disabled={!start || pending} className="h-10">

@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-import { latestEmailLink } from "./helpers";
+import { expect, latestEmailLink, test } from "./helpers";
 
 test.describe("Scenario 1 & 2 — registration, verification and protected resources", () => {
   test("a customer can register, is blocked until verified, then signs in", async ({ page }) => {

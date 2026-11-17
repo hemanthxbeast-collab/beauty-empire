@@ -1,0 +1,40 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 1440,
+    "height": 1966
+  },
+  "clone": {
+    "width": 1440,
+    "height": 2201
+  },
+  "compared_at": {
+    "width": 480,
+    "height": 655
+  },
+  "height_delta_pct": 12.1,
+  "score": 44.3,
+  "verdict": "different",
+  "regions": [
+    {
+      "x": 240,
+      "y": 360,
+      "w": 1200,
+      "h": 1606,
+      "cells": 91,
+      "where": "middle centre"
+    },
+    {
+      "x": 120,
+      "y": 240,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "top left"
+    }
+  ],
+  "files": {
+    "original": "replica/screens/before/admin_admin-desktop.png",
+    "clone": "replica/screens/after/admin_admin-desktop.png"
+  }
+}
