@@ -1,0 +1,6 @@
+{
+  "_about": "Beauty Empire keeps its name and palette (user's own brand). This file lists strings and colours that must NOT reappear: invented claims removed in this audit and retired low-contrast colours.",
+  "avoid": ["eyebrow=\"@beautyempire\"", "hospital-grade", "dermatologist-trusted", "hundreds of five-star", "years of artistry", "A decade of artistry", "Real bridal looks"],
+  "domains": [],
+  "colors": ["#a77b8d", "#1f9d55", "#e6d3db", "#188a4a"]
+}

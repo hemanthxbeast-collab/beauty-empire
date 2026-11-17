@@ -73,7 +73,7 @@ export default async function StaffEditorPage({ params }: { params: Promise<{ id
           displayOrder: staff.displayOrder,
         }}
       />
-      <div className="mt-8 grid gap-6 xl:grid-cols-2">
+      <div className="mt-8 grid gap-6 xl:grid-cols-2 [&>*]:min-w-0">
         <Card>
           <CardHeader>
             <CardTitle>Working hours</CardTitle>

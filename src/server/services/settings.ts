@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { prisma } from "@/server/db";
 import type { BusinessHours, DayHours } from "@/lib/booking/slots";
+import { dateKeyInTz, dayOfWeekForDateKey, formatMinuteOfDay } from "@/lib/time";
 
 export const DEFAULT_BUSINESS_HOURS: BusinessHours = {
   "0": { open: 600, close: 1140, closed: false }, // Sun 10:00–19:00
@@ -41,4 +42,22 @@ export type SalonSettingsData = Awaited<ReturnType<typeof getSalonSettings>>;
 
 export function fullAddress(s: Pick<SalonSettingsData, "addressLine1" | "addressLine2" | "city" | "state" | "postalCode">) {
   return [s.addressLine1, s.addressLine2, `${s.city}, ${s.state} ${s.postalCode}`].filter(Boolean).join(", ");
+}
+
+/** Today's opening hours in the salon's timezone, e.g. "Open today · 10:00 AM – 8:00 PM". */
+export function todayHoursLabel(settings: Pick<SalonSettingsData, "businessHours" | "timezone">, now = new Date()) {
+  const h = settings.businessHours[String(dayOfWeekForDateKey(dateKeyInTz(now, settings.timezone)))];
+  if (!h || h.closed) return { open: false, label: "Closed today" };
+  return { open: true, label: `${formatMinuteOfDay(h.open)} – ${formatMinuteOfDay(h.close)}` };
+}
+
+/** "@handle" from an Instagram profile URL, or null when not configured. */
+export function instagramHandle(url: string | null | undefined) {
+  if (!url) return null;
+  try {
+    const seg = new URL(url).pathname.split("/").filter(Boolean)[0];
+    return seg ? `@${seg}` : null;
+  } catch {
+    return null;
+  }
 }

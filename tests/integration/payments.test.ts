@@ -2,7 +2,8 @@ import { createHmac } from "node:crypto";
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
 import { prisma } from "@/server/db";
 import { markOrderPaid, recordSalonPayment, verifyCheckoutPayment } from "@/server/services/payments";
-import { releaseExpiredPaymentHolds } from "@/server/services/availability";
+import { HOLD_EXPIRED_REASON, releaseExpiredPaymentHolds } from "@/server/services/availability";
+import { updateBookingStatus } from "@/server/services/booking";
 import { Prisma } from "@/generated/prisma/client";
 import { resetData, seedBasics } from "./fixtures";
 
@@ -99,5 +100,39 @@ describe("Scenario 10 — payment status updates only after verified confirmatio
     await recordSalonPayment(appt.id, f.admin.id);
     await expect(recordSalonPayment(appt.id, f.admin.id)).rejects.toMatchObject({ code: "CONFLICT" });
     expect((await prisma.appointment.findUniqueOrThrow({ where: { id: appt.id } })).paymentStatus).toBe("PAID");
+  });
+
+  it("a late payment for an expired hold reinstates the booking when the slot is still free", async () => {
+    const appt = await onlineBooking("order_LATE_FREE");
+    await prisma.appointment.update({ where: { id: appt.id }, data: { createdAt: new Date(Date.now() - 31 * 60_000) } });
+    await releaseExpiredPaymentHolds();
+    await markOrderPaid({ orderId: "order_LATE_FREE", paymentId: "pay_LATE1", amountPaise: 250000, source: "webhook" });
+    const after = await prisma.appointment.findUniqueOrThrow({ where: { id: appt.id } });
+    expect(after.status).toBe("PENDING");
+    expect(after.paymentStatus).toBe("PAID");
+    expect(after.cancellationReason).toBeNull();
+  });
+
+  it("a late payment for an expired hold whose slot was taken is NOT confirmed and is flagged for refund", async () => {
+    const appt = await onlineBooking("order_LATE_TAKEN");
+    await prisma.appointment.update({ where: { id: appt.id }, data: { createdAt: new Date(Date.now() - 31 * 60_000) } });
+    await releaseExpiredPaymentHolds();
+    // Someone else books the same professional and time meanwhile.
+    await prisma.appointment.create({
+      data: { reference: "BE-TAKEN001", staffId: f.staffA.id, startAt: appt.startAt, endAt: appt.endAt, status: "CONFIRMED", customerName: "Y", customerEmail: "y@example.test", customerPhone: "+919812345678", subtotal: 1, total: 1 },
+    });
+    await markOrderPaid({ orderId: "order_LATE_TAKEN", paymentId: "pay_LATE2", amountPaise: 250000, source: "webhook" });
+    const after = await prisma.appointment.findUniqueOrThrow({ where: { id: appt.id } });
+    expect(after.status).toBe("CANCELLED");
+    expect(after.cancellationReason).toBe(HOLD_EXPIRED_REASON);
+    expect(await prisma.notification.count({ where: { userId: f.admin.id, title: { startsWith: "Refund required" } } })).toBe(1);
+  });
+
+  it("cancelling a paid booking flags the payment for refund", async () => {
+    const appt = await onlineBooking("order_PAID_CANCEL");
+    await markOrderPaid({ orderId: "order_PAID_CANCEL", paymentId: "pay_PC", amountPaise: 250000, source: "webhook" });
+    await updateBookingStatus({ appointmentId: appt.id, status: "CANCELLED", reason: "Salon closed", actor: { id: f.admin.id, role: "ADMIN" } });
+    expect(await prisma.notification.count({ where: { userId: f.admin.id, title: { startsWith: "Refund required" } } })).toBe(1);
+    expect(await prisma.auditLog.count({ where: { entityId: appt.id, action: "payment.refund_required" } })).toBe(1);
   });
 });

@@ -85,7 +85,7 @@ describe("Scenario 5 — two customers cannot reserve the same staff time slot",
   it("with 'no preference', concurrent bookings are spread across free professionals", async () => {
     const date = futureDate(4);
     const attempts = await Promise.allSettled(
-      Array.from({ length: 3 }, () => createBooking(parse({ serviceIds: [f.facial.id], staffId: "any", date, minuteOfDay: 780 }), { userId: null, customerProfileId: null })),
+      Array.from({ length: 3 }, (_, i) => createBooking(parse({ serviceIds: [f.facial.id], staffId: "any", date, minuteOfDay: 780, email: `guest${i}@example.test` }), { userId: null, customerProfileId: null })),
     );
     expect(attempts.filter((a) => a.status === "fulfilled")).toHaveLength(2); // two professionals
     const staffUsed = await prisma.appointment.findMany({ where: { status: "PENDING" }, select: { staffId: true } });
@@ -111,6 +111,37 @@ describe("Scenario 5 — two customers cannot reserve the same staff time slot",
     // A cancelled booking does not block the slot.
     await prisma.appointment.updateMany({ where: { reference: "BE-AAAAAAA1" }, data: { status: "CANCELLED" } });
     await expect(prisma.appointment.create({ data: { ...base, reference: "BE-AAAAAAA3", startAt: start, endAt: new Date(start.getTime() + 3_600_000) } })).resolves.toBeTruthy();
+  });
+});
+
+describe("Duplicate submission (double click / retry)", () => {
+  it("the same customer cannot be booked twice at the same time, even with 'no preference'", async () => {
+    const date = futureDate(4);
+    const attempts = await Promise.allSettled(
+      Array.from({ length: 4 }, () => createBooking(parse({ serviceIds: [f.facial.id], staffId: "any", date, minuteOfDay: 840, email: "same@example.test" }), { userId: null, customerProfileId: null })),
+    );
+    expect(attempts.filter((a) => a.status === "fulfilled")).toHaveLength(1);
+    const rejected = attempts.filter((a): a is PromiseRejectedResult => a.status === "rejected");
+    expect(rejected.every((r) => (r.reason as AppError).code === "CONFLICT")).toBe(true);
+    expect(await prisma.appointment.count({ where: { customerEmail: "same@example.test" } })).toBe(1);
+  });
+
+  it("a replayed idempotency key returns the original booking instead of creating another", async () => {
+    const key = "2f0f3a6e-1c4b-4d7a-9a51-7f2e0c1d9b10";
+    const input = parse({ serviceIds: [f.facial.id], staffId: "any", date: futureDate(4), minuteOfDay: 900, email: "retry@example.test", idempotencyKey: key });
+    const [a, b] = await Promise.all([createBooking(input, { userId: null, customerProfileId: null }), createBooking(input, { userId: null, customerProfileId: null })]);
+    expect(a.reference).toBe(b.reference);
+    const c = await createBooking(input, { userId: null, customerProfileId: null });
+    expect(c.reference).toBe(a.reference);
+    expect(await prisma.appointment.count({ where: { customerEmail: "retry@example.test" } })).toBe(1);
+  });
+
+  it("a replayed key with different contact details is refused (no data leak)", async () => {
+    const key = "7c9e2b1a-5d3f-4e6a-8b2c-1a2b3c4d5e6f";
+    await createBooking(parse({ serviceIds: [f.facial.id], staffId: f.staffA.id, date: futureDate(4), minuteOfDay: 600, email: "owner@example.test", idempotencyKey: key }), { userId: null, customerProfileId: null });
+    await expect(
+      createBooking(parse({ serviceIds: [f.facial.id], staffId: f.staffB.id, date: futureDate(4), minuteOfDay: 600, email: "other@example.test", idempotencyKey: key }), { userId: null, customerProfileId: null }),
+    ).rejects.toMatchObject({ code: "CONFLICT" });
   });
 });
 

@@ -39,7 +39,6 @@ export function SectionHeading({
 export function PageHero({ eyebrow, title, description, image, children }: { eyebrow: string; title: ReactNode; description?: ReactNode; image?: string; children?: ReactNode }) {
   return (
     <section className="relative overflow-hidden bg-ivory">
-      <div aria-hidden className="pointer-events-none absolute -top-24 -left-24 size-96 rounded-full bg-blush blur-3xl" />
       <div className={cn("container-lux relative grid items-center gap-10 py-16 lg:py-24", image && "lg:grid-cols-[1.1fr_0.9fr]")}>
         <Reveal>
           <p className="eyebrow">{eyebrow}</p>
@@ -49,7 +48,7 @@ export function PageHero({ eyebrow, title, description, image, children }: { eye
         </Reveal>
         {image && (
           <Reveal delay={0.15} className="relative hidden lg:block">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-t-[12rem] rounded-b-2xl shadow-lift">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-xl">
               <Image src={image} alt="" fill priority sizes="(min-width: 1024px) 40vw, 0px" className="object-cover" />
             </div>
           </Reveal>

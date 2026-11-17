@@ -57,6 +57,7 @@ export default async function AdminBookingDetail({ params }: { params: Promise<{
             <StatusBadge status={appt.status} />
             <PaymentBadge status={appt.paymentStatus} />
             <Badge variant="outline">{appt.paymentMethod === "RAZORPAY" ? "Online (Razorpay)" : "Pay at salon"}</Badge>
+            {(appt.status === "CANCELLED" || appt.status === "REJECTED") && appt.paymentStatus === "PAID" && <Badge variant="danger">Refund due — use Refund below</Badge>}
           </div>
         </div>
         <div className="flex flex-col items-start gap-2 lg:items-end">
@@ -225,7 +226,7 @@ export default async function AdminBookingDetail({ params }: { params: Promise<{
                 <a href={`tel:${appt.customerPhone}`} className="hover:text-magenta">
                   {appt.customerPhone}
                 </a>
-                <a href={whatsappLink(appt.customerPhone, `Hello ${appt.customerName.split(" ")[0]}, this is Beauty Empire regarding your booking ${appt.reference}.`)} target="_blank" rel="noopener noreferrer" className="text-xs text-[#1f9d55] hover:underline">
+                <a href={whatsappLink(appt.customerPhone, `Hello ${appt.customerName.split(" ")[0]}, this is Beauty Empire regarding your booking ${appt.reference}.`)} target="_blank" rel="noopener noreferrer" className="text-xs text-whatsapp hover:underline">
                   WhatsApp
                 </a>
               </p>

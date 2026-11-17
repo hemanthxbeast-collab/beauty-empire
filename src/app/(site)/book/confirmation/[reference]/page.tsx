@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarCheck2, CheckCircle2, Clock3, Hourglass } from "lucide-react";
+import { CalendarCheck2, CalendarPlus, CheckCircle2, Clock3, Hourglass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/primitives";
 import { WhatsappIcon } from "@/components/site/icons";
@@ -134,9 +134,16 @@ export default async function ConfirmationPage({ params, searchParams }: { param
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           {awaitingPayment && integrations.razorpay && <PayNowButton appointmentId={appt.id} token={t} amount={formatINR(appt.total, { decimals: true })} />}
+          {(appt.status === "PENDING" || appt.status === "CONFIRMED") && !awaitingPayment && (
+            <Button asChild variant="outline">
+              <a href={`/api/bookings/${appt.reference}/calendar${t ? `?t=${encodeURIComponent(t)}` : ""}`} download>
+                <CalendarPlus aria-hidden /> Add to calendar
+              </a>
+            </Button>
+          )}
           <Button asChild variant="outline">
             <a href={whatsappLink(settings.whatsappNumber, waMessage)} target="_blank" rel="noopener noreferrer">
-              <WhatsappIcon className="size-4 text-[#1f9d55]" /> Contact us on WhatsApp
+              <WhatsappIcon className="size-4 text-whatsapp" /> Contact us on WhatsApp
             </a>
           </Button>
           {appt.customerId && user?.role === "CUSTOMER" ? (

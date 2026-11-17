@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
  * - Reveal: scroll-driven (`animation-timeline: view()`) where supported; elsewhere content
  *   is simply visible. Both are disabled for prefers-reduced-motion (see globals.css).
  */
-export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string; y?: number }) {
+export function Reveal({ children, delay = 0, className, as: Tag = "div" }: { children: ReactNode; delay?: number; className?: string; y?: number; as?: "div" | "li" }) {
   return (
-    <div className={cn("reveal", className)} style={delay ? ({ "--reveal-delay": `${delay * 40}%` } as CSSProperties) : undefined}>
+    <Tag className={cn("reveal", className)} style={delay ? ({ "--reveal-delay": `${delay * 40}%` } as CSSProperties) : undefined}>
       {children}
-    </div>
+    </Tag>
   );
 }
 

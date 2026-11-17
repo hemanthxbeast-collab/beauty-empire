@@ -26,19 +26,18 @@ export default async function MyAppointmentsPage({ searchParams }: { searchParam
           </Button>
         }
       />
-      <div role="tablist" aria-label="Appointment filter" className="mb-6 inline-flex rounded-full border border-border bg-white p-1">
+      <nav aria-label="View" className="mb-6 inline-flex rounded-full border border-border bg-white p-1">
         {(["upcoming", "past"] as const).map((t) => (
           <Link
             key={t}
-            role="tab"
-            aria-selected={scope === t}
+            aria-current={(scope === t) ? "page" : undefined}
             href={`/account/appointments${t === "past" ? "?tab=past" : ""}`}
             className={cn("rounded-full px-5 py-2 text-sm capitalize transition", scope === t ? "bg-magenta text-white" : "text-charcoal/70 hover:text-magenta")}
           >
             {t === "past" ? "Past & history" : "Upcoming"}
           </Link>
         ))}
-      </div>
+      </nav>
       <AppointmentList
         items={items}
         timeZone={settings.timezone}

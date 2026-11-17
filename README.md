@@ -30,7 +30,8 @@ A full-stack platform for a premium women's beauty parlour and bridal studio. It
 **Booking engine**: six steps (services → professional → date → time → details → payment), then a confirmation page.
 - Multi-service bookings are scheduled back-to-back. "No preference" assigns the least-busy qualified professional.
 - Available slots respect salon hours, staff working hours, leave, existing bookings, buffer time, minimum notice and the booking horizon. Everything is computed in the salon timezone (Asia/Kolkata).
-- **Double booking is impossible.** Booking takes a per-staff advisory lock inside a transaction and re-checks the slot. Behind that, a **PostgreSQL exclusion constraint** (`btree_gist`, `tstzrange`) rejects overlapping active appointments even if the app logic were bypassed.
+- **Double booking is impossible**, per professional *and* per customer: one person cannot hold two overlapping bookings, and a repeated submission (double click, retry after a network error) carries the same idempotency key and returns the original booking.
+- **Per-professional guarantee:** Booking takes a per-staff advisory lock inside a transaction and re-checks the slot. Behind that, a **PostgreSQL exclusion constraint** (`btree_gist`, `tstzrange`) rejects overlapping active appointments even if the app logic were bypassed.
 - Prices, discounts and totals are always computed on the server. Each confirmation gets a unique reference (`BE-XXXXXXXX`) and a private, signed link.
 - Payment is either pay-at-salon or Razorpay. Razorpay is optional and verified server-side; unpaid online bookings hold their slot for 30 minutes.
 
@@ -148,7 +149,7 @@ npm run db:studio
 
 `db:studio` opens Prisma Studio.
 
-No credentials are hard-coded. The seed creates logins only for passwords you supply through environment variables, and it never creates staff or customer logins when `NODE_ENV=production`.
+No credentials are hard-coded. The seed creates logins only for passwords you supply through environment variables. **Sample content** (fictional staff, offers, packages, stock gallery photos, demo customers, bookings and reviews) is only created outside production and unless `SEED_DEMO_DATA=false`; a production seed creates settings, the service menu and the admin account only.
 
 ## Scripts
 
@@ -157,6 +158,8 @@ No credentials are hard-coded. The seed creates logins only for passwords you su
 | `npm run dev` | Development server (Turbopack) |
 | `npm run build` / `npm start` | Production build / server |
 | `npm run typecheck` | `tsc --noEmit` (strict) |
+| `npm run lint` | ESLint (`eslint-config-next`, flat config) |
+| `node scripts/audit.mjs <label>` | UI audit against the dev server: screenshots + overflow + axe WCAG 2.1 AA at 390/768/1440 for visitor, customer, staff and admin (writes `replica/audit-<label>.json`) |
 | `npm test` | All Vitest suites (unit + integration) |
 | `npm run test:unit` | Pure unit tests (no database) |
 | `npm run test:integration` | Integration tests against `TEST_DATABASE_URL` |
@@ -202,6 +205,10 @@ The required scenarios are covered by these tests:
 
 Further tests cover slot generation (hours, leave, buffer, lead time, IST conversion), validation schemas, upload magic-byte sniffing, HTML escaping, open-redirect protection, CSRF origin checks and responsive layout on desktop and mobile.
 
+## Audit artefacts
+
+`replica/` holds the audit and improvement record: `recon.md`, `features.csv` (+ `features-before.csv`), `architecture.md`, `design/tokens.json` (+ contrast report), `improvement-log.md`, `test-plan.md`, `bug-report.md`, `parity.md`, `fixes.md`, `brand.md`, `launch/`, and `audit-*.json` with screenshots in `replica/screens/` (development reference only).
+
 ## Architecture
 
 ```
@@ -236,6 +243,7 @@ Business rules live in `src/server/services/*` and `src/lib/booking/*`, never in
 - **Input & output:** Zod validates everything on the server. Prisma uses parameterized queries. React escapes output, emails escape HTML, and JSON-LD is escaped. Image URLs are allow-listed. Uploads are checked by magic bytes, limited to 5 MB and stored with random names.
 - **CSRF:** Better Auth checks the request origin, Server Actions get Next.js's built-in origin check, and JSON route handlers require a same-origin `Origin` header.
 - **Headers:** CSP, `X-Frame-Options: DENY`, `frame-ancestors 'none'`, `nosniff`, Referrer-Policy and Permissions-Policy are always sent, plus HSTS on https.
+- **Refunds:** cancelling or rejecting a paid booking refunds it automatically through Razorpay; anything that cannot be refunded automatically is flagged to admins ("Refund due"). A payment that arrives after the 30-minute hold expired reinstates the booking if the slot is still free, otherwise it is refunded.
 - **Payments:** card data is never stored. Razorpay signatures are verified with HMAC and constant-time comparison, and each payment is confirmed against the Razorpay API. The amount is checked against the booking stored in the database. Webhooks are verified against the raw body and deduplicated by event ID. Marking a payment as paid is idempotent and transactional.
 - **Errors & audit:** errors shown to users are generic and details go only to server logs. Administrative actions are written to `audit_log`.
 

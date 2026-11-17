@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarClock, Loader2, Star, XCircle } from "lucide-react";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } 
 import { Input, Textarea } from "@/components/ui/input";
 import { Field, Skeleton } from "@/components/ui/primitives";
 import { Calendar } from "@/components/booking/calendar";
+import { useSlots } from "@/components/booking/use-slots";
 import { cancelMyBookingAction, requestRescheduleAction, submitReviewAction } from "@/server/actions/booking";
 import { cn } from "@/lib/utils";
 
@@ -56,8 +57,6 @@ export function CancelBookingButton({ appointmentId }: { appointmentId: string }
   );
 }
 
-type Slot = { minuteOfDay: number; label: string };
-
 export function RescheduleButton({
   appointmentId,
   serviceIds,
@@ -76,21 +75,11 @@ export function RescheduleButton({
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<string | null>(null);
-  const [slots, setSlots] = useState<Slot[] | null>(null);
   const [minute, setMinute] = useState<number | null>(null);
   const [note, setNote] = useState("");
   const [pending, setPending] = useState(false);
-
-  useEffect(() => {
-    if (!date) return;
-    setSlots(null);
-    setMinute(null);
-    const qs = new URLSearchParams({ serviceIds: serviceIds.join(","), staffId, date });
-    fetch(`/api/availability?${qs}`, { cache: "no-store" })
-      .then((r) => r.json())
-      .then((b) => setSlots(Array.isArray(b.slots) ? b.slots : []))
-      .catch(() => setSlots([]));
-  }, [date, serviceIds, staffId]);
+  // `exclude` lets the customer see times that overlap their own current booking.
+  const { slots, error, loading, reload } = useSlots({ serviceIds, staffId, date, exclude: appointmentId, enabled: open });
 
   return (
     <Dialog open={open} onOpenChange={(o) => !pending && setOpen(o)}>
@@ -103,10 +92,24 @@ export function RescheduleButton({
         <DialogTitle>Request a new time</DialogTitle>
         <DialogDescription>Choose a preferred new slot with the same professional. The salon will confirm the change.</DialogDescription>
         <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <Calendar value={date} onChange={setDate} minDate={today} maxDate={lastDate} isDisabled={(_, wd) => closedWeekdays.includes(wd)} />
+          <Calendar
+            value={date}
+            onChange={(d) => {
+              setDate(d);
+              setMinute(null);
+            }}
+            minDate={today} maxDate={lastDate} isDisabled={(_, wd) => closedWeekdays.includes(wd)} />
           <div>
             {!date && <p className="text-sm text-muted-foreground">Select a date to see available times.</p>}
-            {date && !slots && (
+            {error && (
+              <div role="alert" className="space-y-2 rounded-lg bg-red-50 p-3 text-sm text-red-800">
+                <p>{error}</p>
+                <Button size="sm" variant="outline" onClick={reload}>
+                  Try again
+                </Button>
+              </div>
+            )}
+            {date && loading && (
               <div className="grid grid-cols-3 gap-2">
                 {Array.from({ length: 9 }).map((_, i) => (
                   <Skeleton key={i} className="h-10 rounded-full" />
@@ -115,15 +118,14 @@ export function RescheduleButton({
             )}
             {slots && slots.length === 0 && <p className="text-sm text-muted-foreground">No times available that day.</p>}
             {slots && slots.length > 0 && (
-              <div role="radiogroup" aria-label="Available times" className="grid max-h-64 grid-cols-3 gap-2 overflow-y-auto">
+              <div role="group" aria-label="Available times" className="grid max-h-64 grid-cols-3 gap-2 overflow-y-auto">
                 {slots.map((s) => (
                   <button
                     key={s.minuteOfDay}
                     type="button"
-                    role="radio"
-                    aria-checked={minute === s.minuteOfDay}
+                    aria-pressed={minute === s.minuteOfDay}
                     onClick={() => setMinute(s.minuteOfDay)}
-                    className={cn("h-10 rounded-full border text-xs", minute === s.minuteOfDay ? "border-magenta bg-magenta text-white" : "border-border hover:border-magenta")}
+                    className={cn("h-11 rounded-full border text-xs", minute === s.minuteOfDay ? "border-magenta bg-magenta text-white" : "border-border hover:border-magenta")}
                   >
                     {s.label}
                   </button>

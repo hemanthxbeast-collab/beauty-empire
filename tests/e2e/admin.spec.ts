@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-import { credentials, login } from "./helpers";
+import { credentials, expect, login, test } from "./helpers";
 
 test.describe("Scenario 3 & 8 — admin management", () => {
   test("an admin can add a new service and it appears on the public site", async ({ page }) => {

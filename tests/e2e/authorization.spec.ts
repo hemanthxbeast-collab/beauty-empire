@@ -1,5 +1,4 @@
-import { expect, test } from "@playwright/test";
-import { credentials, login } from "./helpers";
+import { credentials, expect, login, test } from "./helpers";
 
 test.describe("Scenario 6 & 7 — role and ownership boundaries", () => {
   test("a customer cannot reach admin/staff areas or other customers' bookings", async ({ page }) => {
@@ -16,8 +15,10 @@ test.describe("Scenario 6 & 7 — role and ownership boundaries", () => {
     await expect(page.getByRole("heading", { name: "Access denied" })).toBeVisible();
     await page.goto("/staff");
     await expect(page.getByRole("heading", { name: "Access denied" })).toBeVisible();
-    const res = await page.goto(`/account/appointments/${otherId}`);
-    expect(res?.status()).toBe(404);
+    // Dashboards stream (loading UI), so the status line is sent before notFound(); assert on content instead.
+    await page.goto(`/account/appointments/${otherId}`);
+    await expect(page.getByRole("heading", { name: "Page not found" })).toBeVisible();
+    await expect(page.getByText(/BE-[A-Z0-9]{8}/)).toHaveCount(0);
   });
 
   test("staff can use the staff dashboard but not admin pages or admin operations", async ({ page }) => {

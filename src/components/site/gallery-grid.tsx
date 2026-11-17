@@ -32,14 +32,13 @@ export function GalleryGrid({ images, initialCategory }: { images: Img[]; initia
 
   return (
     <>
-      <div role="tablist" aria-label="Gallery categories" className="flex gap-2 overflow-x-auto pb-2">
+      <div role="group" aria-label="Filter gallery by category" className="flex flex-wrap gap-2">
         {(["ALL", ...Object.keys(GALLERY_CATEGORY_LABELS)] as const)
           .filter((k) => k === "ALL" || present.has(k as GalleryCategoryKey))
           .map((k) => (
             <button
               key={k}
-              role="tab"
-              aria-selected={filter === k}
+              aria-pressed={filter === k}
               onClick={() => setFilter(k as GalleryCategoryKey | "ALL")}
               className={cn(
                 "shrink-0 rounded-full border px-4 py-2 text-[0.8rem] transition",
@@ -52,7 +51,7 @@ export function GalleryGrid({ images, initialCategory }: { images: Img[]; initia
       </div>
 
       {visible.length === 0 ? (
-        <p className="mt-12 text-center text-muted-foreground">No images in this category yet.</p>
+        <p className="mt-12 text-center text-muted-foreground">{images.length === 0 ? "Our gallery is being prepared — new photos are coming soon." : "No images in this category yet."}</p>
       ) : (
         <motion.div layout className="mt-10 columns-2 gap-4 md:columns-3 lg:columns-4 [&>*]:mb-4">
           <AnimatePresence mode="popLayout">

@@ -36,19 +36,18 @@ export default async function StaffAppointmentsPage({ searchParams }: { searchPa
   return (
     <>
       <PageHeader title="My appointments" description="Your assigned appointments. Customer details are shown only for your bookings." />
-      <div role="tablist" className="mb-6 inline-flex rounded-full border border-border bg-white p-1">
+      <nav aria-label="View" className="mb-6 inline-flex rounded-full border border-border bg-white p-1">
         {(["upcoming", "past"] as const).map((t) => (
           <Link
             key={t}
-            role="tab"
-            aria-selected={(t === "past") === past}
+            aria-current={((t === "past") === past) ? "page" : undefined}
             href={t === "past" ? "/staff/appointments?tab=past" : "/staff/appointments"}
             className={cn("rounded-full px-5 py-2 text-sm capitalize transition", (t === "past") === past ? "bg-magenta text-white" : "text-charcoal/70 hover:text-magenta")}
           >
             {t}
           </Link>
         ))}
-      </div>
+      </nav>
       {items.length === 0 ? (
         <EmptyState icon={<CalendarDays className="size-5" />} title={past ? "No past appointments" : "No upcoming appointments"} />
       ) : (

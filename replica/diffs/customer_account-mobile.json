@@ -1,0 +1,32 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 390,
+    "height": 844
+  },
+  "clone": {
+    "width": 390,
+    "height": 844
+  },
+  "compared_at": {
+    "width": 390,
+    "height": 844
+  },
+  "height_delta_pct": 0.0,
+  "score": 96.5,
+  "verdict": "matches",
+  "regions": [
+    {
+      "x": 0,
+      "y": 224,
+      "w": 32,
+      "h": 32,
+      "cells": 1,
+      "where": "top left"
+    }
+  ],
+  "files": {
+    "original": "replica/screens/before/customer_account-mobile.png",
+    "clone": "replica/screens/after/customer_account-mobile.png"
+  }
+}

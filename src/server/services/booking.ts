@@ -8,6 +8,10 @@ import { computeAvailability, loadBookableServices, type BookableService } from 
 import { getSalonSettings } from "@/server/services/settings";
 import { onBookingCreated, onBookingStatusChanged } from "@/server/services/notifications";
 import { canCustomerCancel, generateBookingReference } from "@/lib/booking/slots";
+import { isOverlapViolation } from "@/server/services/overlap";
+import { refundPaidPayments } from "@/server/services/payments";
+
+export { isOverlapViolation };
 import { dateKeyInTz, dateKeyToDbDate, zonedToUtc } from "@/lib/time";
 import type { createBookingSchema } from "@/lib/validations/booking";
 import { Prisma } from "@/generated/prisma/client";
@@ -15,20 +19,6 @@ import type { AppointmentStatus, UserRole } from "@/generated/prisma/enums";
 import type { z } from "zod";
 
 type CreateBookingData = z.output<typeof createBookingSchema>;
-
-/** True when PostgreSQL rejected a write because of the staff-overlap exclusion constraint. */
-export function isOverlapViolation(err: unknown): boolean {
-  const seen = new Set<unknown>();
-  const visit = (e: unknown): boolean => {
-    if (!e || typeof e !== "object" || seen.has(e)) return false;
-    seen.add(e);
-    const o = e as Record<string, unknown>;
-    const text = `${String(o.message ?? "")} ${String(o.code ?? "")} ${String(o.originalCode ?? "")} ${String(o.constraint ?? "")}`;
-    if (text.includes("appointment_no_staff_overlap") || text.includes("23P01")) return true;
-    return visit(o.cause) || visit(o.meta);
-  };
-  return visit(err);
-}
 
 const D = (v: number | string | Prisma.Decimal) => new Prisma.Decimal(v);
 
@@ -84,7 +74,22 @@ async function insertAppointment(args: {
 }) {
   return prisma.$transaction(
     async (tx) => {
+      // Lock order is always customer → staff, so concurrent writers cannot deadlock.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${"customer:" + args.data.customerEmail}))`;
       await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${"staff:" + args.staffId}))`;
+      // A concurrent duplicate of this exact request (same idempotency key) already committed → replay it.
+      if (args.data.idempotencyKey) {
+        const dup = await tx.appointment.findUnique({ where: { idempotencyKey: args.data.idempotencyKey }, select: { id: true } });
+        if (dup) throw new AppError("IDEMPOTENT_REPLAY", "CONFLICT");
+      }
+      // One person cannot be in two chairs: block overlapping active bookings for the same customer email
+      // (this is what stops a double-submitted "no preference" booking from taking two professionals).
+      const own = await tx.appointment.findFirst({
+        where: { customerEmail: args.data.customerEmail, status: { in: ["PENDING", "CONFIRMED"] }, startAt: { lt: args.endAt }, endAt: { gt: args.startAt } },
+        select: { id: true },
+      });
+      // No reference in the message: the caller may not own this email address.
+      if (own) throw new AppError("There is already an appointment for this email address at this time. Please choose another time or manage the existing booking.", "CONFLICT");
       const clash = await tx.appointment.findFirst({
         where: { staffId: args.staffId, status: { in: ["PENDING", "CONFIRMED"] }, startAt: { lt: args.endAt }, endAt: { gt: args.startAt } },
         select: { id: true },
@@ -100,14 +105,31 @@ async function insertAppointment(args: {
           endAt: args.endAt,
           services: { create: args.lines },
         },
-        select: { id: true, reference: true, status: true, paymentMethod: true, total: true },
+        select: createdSelect,
       });
     },
     { isolationLevel: Prisma.TransactionIsolationLevel.ReadCommitted, timeout: 10_000 },
   );
 }
 
+const createdSelect = { id: true, reference: true, status: true, paymentMethod: true, total: true } as const;
+
+/** A retried request with the same idempotency key returns the booking it already created. */
+async function findByIdempotencyKey(key: string | undefined, customerEmail: string) {
+  if (!key) return null;
+  const existing = await prisma.appointment.findUnique({ where: { idempotencyKey: key }, select: { ...createdSelect, customerEmail: true } });
+  if (!existing) return null;
+  // Keys are random UUIDs; a key replayed with different contact details is rejected rather than leaking the booking.
+  if (existing.customerEmail !== customerEmail) throw new AppError("This booking request was already used. Please refresh and try again.", "CONFLICT");
+  const { customerEmail: _ignored, ...rest } = existing;
+  void _ignored;
+  return rest;
+}
+
 export async function createBooking(input: CreateBookingData, ctx: { userId: string | null; customerProfileId: string | null; ip?: string }) {
+  const replay = await findByIdempotencyKey(input.idempotencyKey, input.customer.email);
+  if (replay) return replay;
+
   const settings = await getSalonSettings();
 
   if (input.paymentMethod === "RAZORPAY" && !(settings.onlinePaymentsEnabled && integrations.razorpay)) {
@@ -161,6 +183,7 @@ export async function createBooking(input: CreateBookingData, ctx: { userId: str
           paymentMethod: input.paymentMethod,
           paymentStatus: input.paymentMethod === "RAZORPAY" ? "PENDING" : "UNPAID",
           offerId: pricing.appliedOfferId,
+          idempotencyKey: input.idempotencyKey ?? null,
         },
       });
       await audit({ actorId: ctx.userId, action: "booking.create", entityType: "Appointment", entityId: appointment.id, metadata: { reference: appointment.reference }, ipAddress: ctx.ip });
@@ -168,6 +191,12 @@ export async function createBooking(input: CreateBookingData, ctx: { userId: str
       if (appointment.paymentMethod === "PAY_AT_SALON") await onBookingCreated(appointment.id);
       return appointment;
     } catch (err) {
+      // Two concurrent requests with the same key: the loser returns the winner's booking.
+      const isReplay = input.idempotencyKey && ((err instanceof AppError && err.message === "IDEMPOTENT_REPLAY") || (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002"));
+      if (isReplay) {
+        const original = await findByIdempotencyKey(input.idempotencyKey, input.customer.email);
+        if (original) return original;
+      }
       const conflict = (err instanceof AppError && err.message === "SLOT_TAKEN") || isOverlapViolation(err);
       if (!conflict) throw err;
       // Try the next eligible professional (only possible with "no preference").
@@ -236,13 +265,18 @@ export async function updateBookingStatus(params: {
 
   await audit({ actorId: params.actor.id, action: `booking.status.${params.status.toLowerCase()}`, entityType: "Appointment", entityId: existing.id, metadata: { from: existing.status, to: params.status, reason: params.reason ?? null } });
 
+  // Money held for a booking that will not happen goes back to the customer.
+  if ((params.status === "CANCELLED" || params.status === "REJECTED") && existing.paymentStatus === "PAID") {
+    await refundPaidPayments(existing.id, params.actor.id, `Booking ${params.status.toLowerCase()} by the salon`);
+  }
+
   const kind = ({ CONFIRMED: "confirmed", CANCELLED: "cancelled", REJECTED: "rejected", COMPLETED: "completed" } as const)[params.status as "CONFIRMED"];
   if (kind) await onBookingStatusChanged(existing.id, kind, params.reason);
 }
 
 export async function cancelBookingAsCustomer(params: { appointmentId: string; customerProfileId: string; userId: string; reason?: string }) {
   const settings = await getSalonSettings();
-  const appt = await prisma.appointment.findUnique({ where: { id: params.appointmentId }, select: { id: true, customerId: true, status: true, startAt: true } });
+  const appt = await prisma.appointment.findUnique({ where: { id: params.appointmentId }, select: { id: true, customerId: true, status: true, startAt: true, paymentStatus: true } });
   // Ownership check: respond "not found" so ids of other customers' bookings are not confirmed.
   if (!appt || appt.customerId !== params.customerProfileId) throw new AppError("Appointment not found.", "NOT_FOUND");
   const policy = canCustomerCancel({ status: appt.status, startAt: appt.startAt, now: new Date(), cancellationWindowHours: settings.cancellationWindowHours });
@@ -254,6 +288,8 @@ export async function cancelBookingAsCustomer(params: { appointmentId: string; c
   });
   if (result.count === 0) throw new AppError("This appointment was just updated. Please refresh.", "CONFLICT");
   await audit({ actorId: params.userId, action: "booking.cancel.customer", entityType: "Appointment", entityId: appt.id });
+  // Cancelled within policy → prepaid amount is refunded (automatically for Razorpay, flagged for admins otherwise).
+  if (appt.paymentStatus === "PAID") await refundPaidPayments(appt.id, params.userId, "Cancelled by the customer within the cancellation policy");
   await onBookingStatusChanged(appt.id, "cancelled", params.reason, { notifyAdmins: true });
 }
 

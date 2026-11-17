@@ -24,12 +24,12 @@ function layout(opts: {
   const rows = (opts.rows ?? [])
     .map(
       ([k, v]) =>
-        `<tr><td style="padding:8px 0;color:#A77B8D;font-size:13px;width:40%">${escapeHtml(k)}</td><td style="padding:8px 0;color:#292329;font-size:14px;font-weight:600">${escapeHtml(v)}</td></tr>`,
+        `<tr><td style="padding:8px 0;color:#8A5A6E;font-size:13px;width:40%">${escapeHtml(k)}</td><td style="padding:8px 0;color:#292329;font-size:14px;font-weight:600">${escapeHtml(v)}</td></tr>`,
     )
     .join("");
   const cta = opts.cta
     ? `<p style="margin:28px 0"><a href="${escapeHtml(opts.cta.url)}" style="background:#C21870;color:#ffffff;text-decoration:none;padding:14px 28px;border-radius:999px;font-weight:600;font-size:14px;display:inline-block">${escapeHtml(opts.cta.label)}</a></p>
-       <p style="font-size:12px;color:#A77B8D;word-break:break-all">If the button does not work, copy this link into your browser:<br>${escapeHtml(opts.cta.url)}</p>`
+       <p style="font-size:12px;color:#8A5A6E;word-break:break-all">If the button does not work, copy this link into your browser:<br>${escapeHtml(opts.cta.url)}</p>`
     : "";
   return `<!doctype html><html><body style="margin:0;background:#FFF9F7;font-family:Inter,Segoe UI,Arial,sans-serif">
 <span style="display:none;max-height:0;overflow:hidden">${escapeHtml(opts.preheader)}</span>
@@ -37,7 +37,7 @@ function layout(opts: {
 <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #F4B6CF;border-radius:20px;overflow:hidden">
 <tr><td style="padding:28px 36px;border-bottom:1px solid #FCE7F0;text-align:center">
 <div style="font-family:${SERIF};font-size:26px;letter-spacing:2px;color:#9D145A">BEAUTY EMPIRE</div>
-<div style="font-size:11px;letter-spacing:3px;color:#A77B8D;margin-top:4px">BEAUTY · CONFIDENCE · YOU</div></td></tr>
+<div style="font-size:11px;letter-spacing:3px;color:#8A5A6E;margin-top:4px">BEAUTY · CONFIDENCE · YOU</div></td></tr>
 <tr><td style="padding:32px 36px">
 <h1 style="font-family:${SERIF};font-weight:500;font-size:26px;color:#292329;margin:0 0 12px">${escapeHtml(opts.heading)}</h1>
 <p style="color:#4b424b;font-size:15px;line-height:1.6;margin:0 0 16px">${escapeHtml(opts.intro)}</p>
@@ -45,7 +45,7 @@ ${rows ? `<table role="presentation" width="100%" style="border-top:1px solid #F
 ${cta}
 ${opts.footer ? `<p style="color:#4b424b;font-size:13px;line-height:1.6">${escapeHtml(opts.footer)}</p>` : ""}
 </td></tr>
-<tr><td style="padding:20px 36px;background:#FCE7F0;color:#A77B8D;font-size:12px;text-align:center">You are receiving this email because of activity on your Beauty Empire account or booking.</td></tr>
+<tr><td style="padding:20px 36px;background:#FCE7F0;color:#8A5A6E;font-size:12px;text-align:center">You are receiving this email because of activity on your Beauty Empire account or booking.</td></tr>
 </table></td></tr></table></body></html>`;
 }
 

@@ -29,7 +29,7 @@ import {
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/site/logo";
-import { authClient } from "@/lib/auth-client";
+import { signOut } from "@/lib/sign-out";
 import { cn, initials } from "@/lib/utils";
 
 const ICONS = {
@@ -74,7 +74,7 @@ export function DashboardShell({
   const isActive = (item: ShellNavItem) => (item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(item.href + "/"));
 
   async function logout() {
-    await authClient.signOut();
+    await signOut();
     router.push("/login");
     router.refresh();
   }
@@ -154,10 +154,10 @@ export function DashboardShell({
           <Link
             href={nav.find((n) => n.icon === "bell")?.href ?? "#"}
             className="relative rounded-full p-2 text-charcoal/70 hover:bg-blush hover:text-magenta"
-            aria-label={`Notifications${unread ? ` (${unread} unread)` : ""}`}
+            aria-label={`Notifications${unread ? `, ${unread > 9 ? "9+" : unread} unread` : ""}`}
           >
             <Bell className="size-5" />
-            {unread > 0 && <span className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-magenta text-[0.6rem] text-white">{unread > 9 ? "9+" : unread}</span>}
+            {unread > 0 && <span aria-hidden className="absolute top-1 right-1 flex size-4 items-center justify-center rounded-full bg-magenta text-[0.6rem] text-white">{unread > 9 ? "9+" : unread}</span>}
           </Link>
         </header>
         <main id="main" className="px-5 py-8 lg:px-10 lg:py-10">
@@ -183,9 +183,9 @@ export function PageHeader({ title, description, actions }: { title: string; des
 export function StatCard({ label, value, hint, accent }: { label: string; value: React.ReactNode; hint?: string; accent?: boolean }) {
   return (
     <div className={cn("rounded-2xl border p-5", accent ? "border-magenta bg-magenta text-white" : "border-border bg-white")}>
-      <p className={cn("text-[0.68rem] font-semibold tracking-[0.15em] uppercase", accent ? "text-white/75" : "text-muted-rose")}>{label}</p>
+      <p className={cn("text-[0.68rem] font-semibold tracking-[0.15em] uppercase", accent ? "text-white" : "text-muted-rose")}>{label}</p>
       <p className={cn("mt-2 font-serif text-2xl break-words sm:text-3xl", accent ? "text-white" : "text-charcoal")}>{value}</p>
-      {hint && <p className={cn("mt-1 text-xs", accent ? "text-white/70" : "text-muted-foreground")}>{hint}</p>}
+      {hint && <p className={cn("mt-1 text-xs", accent ? "text-white" : "text-muted-foreground")}>{hint}</p>}
     </div>
   );
 }

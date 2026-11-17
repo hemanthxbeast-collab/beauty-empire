@@ -73,7 +73,7 @@ export function futureDate(daysAhead = 3) {
   return addDaysToDateKey(dateKeyInTz(new Date(), "Asia/Kolkata"), daysAhead);
 }
 
-export function bookingInput(o: { serviceIds: string[]; staffId: string; date: string; minuteOfDay: number; email?: string; paymentMethod?: "PAY_AT_SALON" | "RAZORPAY" }) {
+export function bookingInput(o: { serviceIds: string[]; staffId: string; date: string; minuteOfDay: number; email?: string; paymentMethod?: "PAY_AT_SALON" | "RAZORPAY"; idempotencyKey?: string }) {
   return {
     serviceIds: o.serviceIds,
     staffId: o.staffId,
@@ -82,6 +82,7 @@ export function bookingInput(o: { serviceIds: string[]; staffId: string; date: s
     customer: { name: "Test Customer", email: o.email ?? "guest@example.test", phone: "+919812345678", notes: undefined, specialRequirements: undefined },
     paymentMethod: o.paymentMethod ?? ("PAY_AT_SALON" as const),
     offerId: undefined,
+    idempotencyKey: o.idempotencyKey,
     acceptPolicy: true as const,
   };
 }

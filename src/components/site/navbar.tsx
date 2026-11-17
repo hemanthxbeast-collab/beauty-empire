@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Logo } from "./logo";
 import { NAV_LINKS } from "@/lib/constants";
-import { authClient } from "@/lib/auth-client";
+import { signOut } from "@/lib/sign-out";
 import { cn, initials } from "@/lib/utils";
 
 type NavUser = { name: string; role: "CUSTOMER" | "STAFF" | "ADMIN" } | null;
@@ -41,12 +41,11 @@ export function Navbar({ user }: { user: NavUser }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   async function logout() {
-    await authClient.signOut();
+    await signOut();
     router.push("/");
     router.refresh();
   }
@@ -82,11 +81,11 @@ export function Navbar({ user }: { user: NavUser }) {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button
-                  className="hidden items-center gap-2 rounded-full border border-border bg-white py-1 pr-3 pl-1 text-sm transition hover:border-rose sm:flex"
-                  aria-label="Account menu"
-                >
-                  <span className="flex size-8 items-center justify-center rounded-full bg-blush font-serif text-sm text-magenta-deep">{initials(user.name)}</span>
+                <button className="hidden items-center gap-2 rounded-full border border-border bg-white py-1 pr-3 pl-1 text-sm transition hover:border-rose sm:flex">
+                  <span aria-hidden className="flex size-8 items-center justify-center rounded-full bg-blush font-serif text-sm text-magenta-deep">
+                    {initials(user.name)}
+                  </span>
+                  <span className="sr-only">Account menu for </span>
                   <span className="max-w-28 truncate text-charcoal/80">{user.name.split(" ")[0]}</span>
                 </button>
               </DropdownMenuTrigger>
@@ -130,7 +129,7 @@ export function Navbar({ user }: { user: NavUser }) {
             <DialogContent side="right" aria-describedby={undefined}>
               <DialogTitle className="sr-only">Menu</DialogTitle>
               <Logo />
-              <nav aria-label="Mobile" className="mt-10 flex flex-col">
+              <nav aria-label="Mobile" className="mt-10 flex flex-col" onClick={(e) => (e.target as HTMLElement).closest("a") && setOpen(false)}>
                 {NAV_LINKS.map((l) => (
                   <Link
                     key={l.href}
@@ -145,7 +144,7 @@ export function Navbar({ user }: { user: NavUser }) {
                   </Link>
                 ))}
               </nav>
-              <div className="mt-auto space-y-3 pt-8">
+              <div className="mt-auto space-y-3 pt-8" onClick={(e) => (e.target as HTMLElement).closest("a") && setOpen(false)}>
                 <Button asChild className="w-full" size="lg">
                   <Link href="/book">Book Appointment</Link>
                 </Button>

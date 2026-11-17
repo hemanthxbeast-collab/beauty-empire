@@ -25,4 +25,7 @@ coverage/
 .vercel
 
 # e2e
-test-results-e2e.log
+test-results-e2e*.log
+
+# audit screenshots (local reference only; JSON reports are kept)
+replica/screens/

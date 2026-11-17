@@ -23,7 +23,7 @@ export default async function StaffAvailabilityPage() {
   return (
     <>
       <PageHeader title="Availability" description="Set your weekly working hours and add leave. Existing bookings are not changed automatically." />
-      <div className="grid gap-6 xl:grid-cols-2">
+      <div className="grid gap-6 xl:grid-cols-2 [&>*]:min-w-0">
         <Card>
           <CardHeader>
             <CardTitle>Weekly working hours</CardTitle>

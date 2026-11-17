@@ -81,3 +81,8 @@ export function hhmmToMinutes(value: string): number {
   if (!match) throw new Error("Invalid time");
   return Number(match[1]) * 60 + Number(match[2]);
 }
+
+/** True once an instant is in the past (evaluated at request time on the server). */
+export function hasStarted(instant: Date): boolean {
+  return instant.getTime() <= Date.now();
+}

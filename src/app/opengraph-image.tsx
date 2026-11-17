@@ -22,7 +22,7 @@ export default function OpenGraphImage() {
         <div style={{ fontSize: 22, letterSpacing: 8, color: "#C21870", textTransform: "uppercase", fontFamily: "sans-serif" }}>Beauty · Confidence · You</div>
         <div style={{ fontSize: 110, color: "#292329", marginTop: 24, lineHeight: 1 }}>Beauty Empire</div>
         <div style={{ fontSize: 44, color: "#9D145A", marginTop: 24, fontStyle: "italic" }}>Your Beauty, Our Passion.</div>
-        <div style={{ fontSize: 26, color: "#A77B8D", marginTop: 40, fontFamily: "sans-serif" }}>Salon · Bridal Studio · Skin & Hair Rituals</div>
+        <div style={{ fontSize: 26, color: "#8A5A6E", marginTop: 40, fontFamily: "sans-serif" }}>Salon · Bridal Studio · Skin & Hair Rituals</div>
       </div>
     ),
     size,

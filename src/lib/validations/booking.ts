@@ -32,6 +32,7 @@ export const createBookingSchema = z.object({
   customer: customerDetailsSchema,
   paymentMethod: paymentMethodSchema,
   offerId: idSchema.optional(),
+  idempotencyKey: z.uuid().optional(),
   acceptPolicy: z.literal(true, { message: "Please accept the booking policy" }),
 });
 export type CreateBookingInput = z.input<typeof createBookingSchema>;

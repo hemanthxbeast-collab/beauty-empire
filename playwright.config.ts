@@ -32,7 +32,7 @@ export default defineConfig({
     command: `npm run build && npx next start -p ${PORT}`,
     url: BASE_URL,
     timeout: 300_000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false, // always build & serve fresh code (a stale reused server once produced false failures)
     env: {
       DATABASE_URL: TEST_DATABASE_URL,
       NEXT_PUBLIC_APP_URL: BASE_URL,
@@ -42,7 +42,7 @@ export default defineConfig({
       DEV_MAIL_OUTBOX: "true",
       CRON_SECRET: "e2e-cron-secret",
       // The suite signs in many times from one IP; the limit stays on (see rate-limit.spec.ts).
-      AUTH_SIGNIN_MAX_PER_MINUTE: "25",
+      AUTH_SIGNIN_MAX_PER_MINUTE: "60",
     },
   },
 });

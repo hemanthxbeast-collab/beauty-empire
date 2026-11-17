@@ -24,19 +24,18 @@ export default async function AdminCustomersPage({ searchParams }: { searchParam
   const page = Math.max(1, Number(sp.page) || 1);
 
   const tabs = (
-    <div role="tablist" className="mb-6 inline-flex rounded-full border border-border bg-white p-1">
+    <nav aria-label="View" className="mb-6 inline-flex rounded-full border border-border bg-white p-1">
       {(["customers", "messages"] as const).map((t) => (
         <Link
           key={t}
-          role="tab"
-          aria-selected={tab === t}
+          aria-current={(tab === t) ? "page" : undefined}
           href={t === "messages" ? "/admin/customers?tab=messages" : "/admin/customers"}
           className={cn("rounded-full px-5 py-2 text-sm capitalize transition", tab === t ? "bg-magenta text-white" : "text-charcoal/70 hover:text-magenta")}
         >
           {t === "messages" ? "Enquiry messages" : "Customers"}
         </Link>
       ))}
-    </div>
+    </nav>
   );
 
   if (tab === "messages") {

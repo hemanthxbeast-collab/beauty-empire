@@ -1,0 +1,72 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 1478,
+    "height": 1133
+  },
+  "clone": {
+    "width": 1440,
+    "height": 917
+  },
+  "compared_at": {
+    "width": 480,
+    "height": 306
+  },
+  "height_delta_pct": -16.8,
+  "score": 52.0,
+  "verdict": "partly",
+  "regions": [
+    {
+      "x": 246,
+      "y": 246,
+      "w": 1108,
+      "h": 739,
+      "cells": 26,
+      "where": "middle centre"
+    },
+    {
+      "x": 369,
+      "y": 0,
+      "w": 123,
+      "h": 123,
+      "cells": 1,
+      "where": "top left"
+    },
+    {
+      "x": 1354,
+      "y": 246,
+      "w": 123,
+      "h": 123,
+      "cells": 1,
+      "where": "top right"
+    },
+    {
+      "x": 246,
+      "y": 492,
+      "w": 123,
+      "h": 123,
+      "cells": 1,
+      "where": "middle left"
+    },
+    {
+      "x": 0,
+      "y": 615,
+      "w": 123,
+      "h": 123,
+      "cells": 1,
+      "where": "bottom left"
+    },
+    {
+      "x": 0,
+      "y": 862,
+      "w": 123,
+      "h": 123,
+      "cells": 1,
+      "where": "bottom left"
+    }
+  ],
+  "files": {
+    "original": "replica/screens/before/staff_staff_availability-desktop.png",
+    "clone": "replica/screens/after/staff_staff_availability-desktop.png"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "_about": "Beauty Empire tokens AS FOUND (baseline ae2cdd1). Kept for the contrast comparison.",
+  "color": {
+    "bg": "#ffffff", "surface-ivory": "#fff9f7", "surface-blush": "#fce7f0", "surface-grey": "#f5f3f4", "surface-dark": "#292329",
+    "text": "#292329", "text-muted": "#6e6168", "text-subtle-rose": "#a77b8d",
+    "accent": "#c21870", "accent-strong": "#9d145a", "on-accent": "#ffffff", "on-accent-75": "#f0c5db",
+    "text-on-dark": "#ffffff", "text-on-dark-muted": "#a9a5a9", "text-on-dark-subtle": "#948f94", "rose-on-dark": "#f4b6cf",
+    "border": "#eedde4", "border-input": "#e6d3db", "danger": "#c0352b"
+  },
+  "pairs": [
+    ["text", "bg"], ["text", "surface-ivory"], ["text", "surface-blush"], ["text", "surface-grey"],
+    ["text-muted", "bg"], ["text-muted", "surface-ivory"], ["text-muted", "surface-blush"], ["text-muted", "surface-grey"],
+    ["text-subtle-rose", "bg"], ["text-subtle-rose", "surface-ivory"], ["text-subtle-rose", "surface-blush"],
+    ["accent", "bg"], ["accent", "surface-ivory"], ["accent", "surface-blush"], ["accent-strong", "surface-blush"],
+    ["on-accent", "accent"], ["on-accent-75", "accent"], ["on-accent", "accent-strong"],
+    ["text-on-dark", "surface-dark"], ["text-on-dark-muted", "surface-dark"], ["text-on-dark-subtle", "surface-dark"], ["rose-on-dark", "surface-dark"],
+    ["danger", "bg"], ["border-input", "bg", "ui"], ["accent", "bg", "ui"]
+  ]
+}

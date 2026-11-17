@@ -4,7 +4,9 @@ import { prisma } from "@/server/db";
 import { env, integrations } from "@/server/env";
 import { AppError } from "@/server/errors";
 import { audit } from "@/server/services/audit";
-import { onBookingCreated } from "@/server/services/notifications";
+import { adminUserIds, notifyUsers, onBookingCreated } from "@/server/services/notifications";
+import { HOLD_EXPIRED_REASON } from "@/server/services/availability";
+import { isOverlapViolation } from "@/server/services/overlap";
 import { getSalonSettings } from "@/server/services/settings";
 import { Prisma } from "@/generated/prisma/client";
 import { verifyCheckoutSignature as verifyCheckoutSignatureWith, verifyWebhookSignature as verifyWebhookSignatureWith } from "@/lib/razorpay-signature";
@@ -86,7 +88,8 @@ export async function markOrderPaid(params: { orderId: string; paymentId: string
       include: { appointment: { select: { id: true, total: true, status: true } } },
     });
     if (!payment) throw new AppError("Unknown payment order.", "NOT_FOUND");
-    if (payment.status === "PAID") return { appointmentId: payment.appointmentId, alreadyProcessed: true };
+    const active = payment.appointment.status === "PENDING" || payment.appointment.status === "CONFIRMED";
+    if (payment.status === "PAID") return { appointmentId: payment.appointmentId, paymentId: payment.id, alreadyProcessed: true, active };
     if (!payment.amount.equals(payment.appointment.total)) throw new AppError("Payment amount mismatch.", "CONFLICT");
     if (params.amountPaise !== undefined && params.amountPaise !== toPaise(payment.amount)) throw new AppError("Payment amount mismatch.", "CONFLICT");
 
@@ -94,7 +97,7 @@ export async function markOrderPaid(params: { orderId: string; paymentId: string
       where: { id: payment.id, status: { not: "PAID" } },
       data: { status: "PAID", razorpayPaymentId: params.paymentId, paidAt: new Date(), failureReason: null },
     });
-    if (updated.count === 0) return { appointmentId: payment.appointmentId, alreadyProcessed: true };
+    if (updated.count === 0) return { appointmentId: payment.appointmentId, paymentId: payment.id, alreadyProcessed: true, active };
 
     const settings = await tx.salonSettings.findUnique({ where: { id: 1 }, select: { autoConfirmBookings: true } });
     await tx.appointment.update({
@@ -105,10 +108,83 @@ export async function markOrderPaid(params: { orderId: string; paymentId: string
       },
     });
     await audit({ tx, actorId: null, action: `payment.captured.${params.source}`, entityType: "Payment", entityId: payment.id, metadata: { orderId: params.orderId } });
-    return { appointmentId: payment.appointmentId, alreadyProcessed: false };
+    return { appointmentId: payment.appointmentId, paymentId: payment.id, alreadyProcessed: false, active };
   });
-  if (!outcome.alreadyProcessed) await onBookingCreated(outcome.appointmentId);
+  if (!outcome.alreadyProcessed) {
+    if (outcome.active) await onBookingCreated(outcome.appointmentId);
+    else await handleLatePayment(outcome.appointmentId);
+  }
   return outcome;
+}
+
+/**
+ * Money arrived for a booking that is no longer active (usually the 30-minute hold expired).
+ * Reinstate it if the slot is still free — the exclusion constraint decides atomically —
+ * otherwise refund. A success email is only sent if the booking really exists again.
+ */
+async function handleLatePayment(appointmentId: string) {
+  const settings = await prisma.salonSettings.findUnique({ where: { id: 1 }, select: { autoConfirmBookings: true } });
+  try {
+    const reinstated = await prisma.$transaction(async (tx) => {
+      const appt = await tx.appointment.findUnique({ where: { id: appointmentId }, select: { customerEmail: true, startAt: true, endAt: true } });
+      if (!appt) return 0;
+      // Same lock and rule as a new booking: one customer cannot hold two overlapping active appointments.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${"customer:" + appt.customerEmail}))`;
+      const own = await tx.appointment.findFirst({
+        where: { id: { not: appointmentId }, customerEmail: appt.customerEmail, status: { in: ["PENDING", "CONFIRMED"] }, startAt: { lt: appt.endAt }, endAt: { gt: appt.startAt } },
+        select: { id: true },
+      });
+      if (own) return 0;
+      const res = await tx.appointment.updateMany({
+        where: { id: appointmentId, status: "CANCELLED", cancellationReason: HOLD_EXPIRED_REASON },
+        data: { status: settings?.autoConfirmBookings ? "CONFIRMED" : "PENDING", cancelledAt: null, cancelledBy: null, cancellationReason: null },
+      });
+      return res.count;
+    });
+    if (reinstated === 1) {
+      await audit({ actorId: null, action: "booking.reinstated.late_payment", entityType: "Appointment", entityId: appointmentId });
+      await onBookingCreated(appointmentId);
+      return "reinstated" as const;
+    }
+  } catch (err) {
+    if (!isOverlapViolation(err)) throw err; // slot was taken meanwhile → refund below
+  }
+  await refundPaidPayments(appointmentId, null, "Payment received after the booking was no longer available");
+  return "refunded" as const;
+}
+
+/**
+ * Returns money held for an inactive (cancelled / rejected / expired) booking. Online payments are
+ * refunded through Razorpay automatically; anything that cannot be refunded automatically
+ * (salon payments, Razorpay not configured, API error) is flagged to admins as "refund required".
+ */
+export async function refundPaidPayments(appointmentId: string, actorId: string | null, reason: string) {
+  const paid = await prisma.payment.findMany({ where: { appointmentId, status: "PAID" }, include: { appointment: { select: { reference: true } } } });
+  const manual: string[] = [];
+  let refunded = 0;
+  for (const p of paid) {
+    if (p.method === "RAZORPAY" && integrations.razorpay) {
+      try {
+        await refundPayment(p.id, actorId);
+        refunded++;
+        continue;
+      } catch (err) {
+        console.error("[payments] automatic refund failed", err);
+      }
+    }
+    manual.push(p.id);
+  }
+  if (manual.length) {
+    const ref = paid[0]?.appointment.reference ?? "";
+    await audit({ actorId, action: "payment.refund_required", entityType: "Appointment", entityId: appointmentId, metadata: { reason, payments: manual } });
+    await notifyUsers(await adminUserIds(), {
+      type: "PAYMENT_RECEIVED",
+      title: `Refund required: ${ref}`,
+      body: `${reason}. Refund ${manual.length} payment(s) from the booking page.`,
+      link: `/admin/bookings/${appointmentId}`,
+    });
+  }
+  return { refunded, manual: manual.length };
 }
 
 export async function markOrderFailed(orderId: string, reason: string) {
@@ -154,7 +230,7 @@ export async function recordSalonPayment(appointmentId: string, actorId: string)
 }
 
 /** Refund a captured payment (Razorpay API for online payments, record-only for salon payments). */
-export async function refundPayment(paymentId: string, actorId: string) {
+export async function refundPayment(paymentId: string, actorId: string | null) {
   const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
   if (!payment) throw new AppError("Payment not found.", "NOT_FOUND");
   if (payment.status !== "PAID") throw new AppError("Only paid payments can be refunded.", "VALIDATION");

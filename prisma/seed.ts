@@ -6,7 +6,10 @@
  * Creates salon settings, the service catalogue, staff, gallery, offers and packages.
  * Accounts are only created when their passwords are supplied via environment variables
  * (SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD, SEED_STAFF_PASSWORD, SEED_CUSTOMER_PASSWORD).
- * Demo bookings/reviews are added unless SEED_DEMO_DATA=false. No credentials are hard-coded.
+ * SAMPLE content (fictional staff, offers, packages, stock gallery photos, demo customers, bookings
+ * and reviews) is only created outside production and unless SEED_DEMO_DATA=false. A production
+ * seed creates settings (placeholder contact details to replace in Admin → Settings), the service
+ * menu and the admin account only. No credentials are hard-coded.
  */
 import "dotenv/config";
 import { randomBytes, randomUUID } from "node:crypto";
@@ -19,6 +22,7 @@ import { IMG, unsplash } from "../src/lib/images";
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 const TZ = process.env.SALON_TIMEZONE || "Asia/Kolkata";
 const isProd = process.env.NODE_ENV === "production";
+const sampleContent = process.env.SEED_DEMO_DATA !== "false" && !isProd;
 
 const slug = (s: string) =>
   s.toLowerCase().replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -265,9 +269,10 @@ async function main() {
       email: "hello@beautyempire.test",
       googleMapsEmbedUrl: "https://www.google.com/maps?q=Banjara+Hills,+Hyderabad&output=embed",
       googleMapsLink: "https://www.google.com/maps/search/?api=1&query=Banjara+Hills+Hyderabad",
-      instagramUrl: "https://www.instagram.com/",
-      facebookUrl: "https://www.facebook.com/",
-      youtubeUrl: "https://www.youtube.com/",
+      // Social links stay empty until the salon's real profiles are entered in Admin → Settings.
+      instagramUrl: null,
+      facebookUrl: null,
+      youtubeUrl: null,
       timezone: TZ,
       businessHours: DEFAULT_HOURS,
       slotIntervalMinutes: 30,
@@ -331,138 +336,149 @@ async function main() {
     console.log("  • SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD not set — skipping admin account");
   }
 
-  // Staff
-  const staffPassword = process.env.SEED_STAFF_PASSWORD;
   const staffIds: Record<string, string> = {};
-  for (const [i, s] of STAFF.entries()) {
-    let userId = (await prisma.user.findUnique({ where: { email: s.email } }))?.id;
-    if (staffPassword && !isProd) {
-      userId = await upsertCredentialUser({ name: s.name, email: s.email, phone: s.phone, role: "STAFF", password: staffPassword });
-    } else if (!userId) {
-      // Staff profile without login credentials — admin can reset the password later.
-      userId = randomUUID();
-      await prisma.user.create({ data: { id: userId, name: s.name, email: s.email, phone: s.phone, role: "STAFF", emailVerified: true } });
-    }
-    const profile = await prisma.staffProfile.upsert({
-      where: { userId },
-      update: {},
-      create: {
-        userId,
-        slug: slug(s.name),
-        title: s.title,
-        bio: s.bio,
-        specialties: s.specialties,
-        yearsOfExperience: s.years,
-        displayOrder: i,
-      },
-    });
-    staffIds[s.key] = profile.id;
-    const serviceIds = CATALOGUE.filter((c) => s.categories.includes(c.name)).flatMap((c) => c.services.map(([n]) => serviceIdByName.get(n)!));
-    await prisma.staffService.createMany({ data: serviceIds.map((serviceId) => ({ staffId: profile.id, serviceId })), skipDuplicates: true });
-    for (let day = 0; day < 7; day++) {
-      const hours = DEFAULT_HOURS[String(day) as keyof typeof DEFAULT_HOURS];
-      await prisma.staffAvailability.upsert({
-        where: { staffId_dayOfWeek: { staffId: profile.id, dayOfWeek: day } },
+  if (!sampleContent) {
+    console.log("  • production / SEED_DEMO_DATA=false: skipping sample staff, offers, packages, gallery and demo data");
+  } else {
+    // Staff
+    const staffPassword = process.env.SEED_STAFF_PASSWORD;
+    for (const [i, s] of STAFF.entries()) {
+      let userId = (await prisma.user.findUnique({ where: { email: s.email } }))?.id;
+      if (staffPassword && !isProd) {
+        userId = await upsertCredentialUser({ name: s.name, email: s.email, phone: s.phone, role: "STAFF", password: staffPassword });
+      } else if (!userId) {
+        // Staff profile without login credentials — admin can reset the password later.
+        userId = randomUUID();
+        await prisma.user.create({ data: { id: userId, name: s.name, email: s.email, phone: s.phone, role: "STAFF", emailVerified: true } });
+      }
+      const profile = await prisma.staffProfile.upsert({
+        where: { userId },
         update: {},
-        create: { staffId: profile.id, dayOfWeek: day, startMinute: hours.open, endMinute: hours.close, isAvailable: day !== s.offDay },
+        create: {
+          userId,
+          slug: slug(s.name),
+          title: s.title,
+          bio: s.bio,
+          specialties: s.specialties,
+          yearsOfExperience: s.years,
+          displayOrder: i,
+        },
+      });
+      staffIds[s.key] = profile.id;
+      const serviceIds = CATALOGUE.filter((c) => s.categories.includes(c.name)).flatMap((c) => c.services.map(([n]) => serviceIdByName.get(n)!));
+      await prisma.staffService.createMany({ data: serviceIds.map((serviceId) => ({ staffId: profile.id, serviceId })), skipDuplicates: true });
+      for (let day = 0; day < 7; day++) {
+        const hours = DEFAULT_HOURS[String(day) as keyof typeof DEFAULT_HOURS];
+        await prisma.staffAvailability.upsert({
+          where: { staffId_dayOfWeek: { staffId: profile.id, dayOfWeek: day } },
+          update: {},
+          create: { staffId: profile.id, dayOfWeek: day, startMinute: hours.open, endMinute: hours.close, isAvailable: day !== s.offDay },
+        });
+      }
+    }
+    console.log(`  ✓ ${STAFF.length} staff with services and weekly availability${staffPassword ? " (login enabled)" : ""}`);
+
+    // Packages
+    const packages = [
+      { name: "Royal Bridal Package", price: 39999, bridal: true, image: IMG.bride2, items: ["Bridal Makeup", "Bridal Hairstyling", "Saree Draping", "Gold Facial", "Premium Manicure"], desc: "Our most-loved bridal experience: signature bridal makeup and hairstyling on the day, draping, plus a gold facial and premium manicure in the days before." },
+      { name: "Pre-Bridal Glow Ritual", price: 8999, bridal: true, image: IMG.mehndi2, items: ["Hydra Facial", "Body Polishing", "Hair Spa", "Eyebrow Shaping"], desc: "A curated pre-wedding ritual to prepare your skin and hair for the big day." },
+      { name: "Facial Combo", price: 3499, bridal: false, image: IMG.facialGold, items: ["Gold Facial", "De-Tan Treatment", "Eyebrow Threading"], desc: "Gold facial with de-tan and brow threading — the perfect monthly refresh." },
+    ];
+    for (const [i, p] of packages.entries()) {
+      const pkg = await prisma.servicePackage.upsert({
+        where: { slug: slug(p.name) },
+        update: {},
+        create: { name: p.name, slug: slug(p.name), description: p.desc, price: new Prisma.Decimal(p.price), imageUrl: unsplash(p.image, 900, 1100), isBridal: p.bridal, displayOrder: i },
+      });
+      await prisma.servicePackageItem.createMany({ data: p.items.map((n) => ({ packageId: pkg.id, serviceId: serviceIdByName.get(n)! })), skipDuplicates: true });
+    }
+
+    // Offers
+    const offers = [
+      { title: "Bridal Beauty Package", percent: 15, original: 29998, image: IMG.bride5, items: ["Bridal Makeup", "Bridal Hairstyling"], desc: "Book bridal makeup with bridal hairstyling and save 15% on your wedding-day look.", until: 90 },
+      { title: "Facial Combo Offer", percent: 20, original: 3998, image: IMG.facialTreatment, items: ["Hydra Facial", "Clean-Up"], desc: "Pair our Hydra Facial with a Clean-Up for a deeply refreshed, glowing complexion.", until: 45 },
+      { title: "Hair Spa Package", percent: 25, original: 2098, image: IMG.hairWash, items: ["Hair Spa", "Hair Wash and Blow Dry"], desc: "Restorative hair spa with a luxury wash and blow-dry — weekday favourite.", until: 30 },
+      { title: "Festival Glow Offer", percent: 20, original: 6998, image: IMG.saree1, items: ["Party Makeup", "Saree Draping", "Gold Facial"], desc: "Get festival-ready with party makeup, saree draping and a radiant gold facial.", until: 40 },
+      { title: "Seasonal Pamper Package", percent: 15, original: 3297, image: IMG.nailsPastel, items: ["Premium Manicure", "Pedicure", "Hand and Foot Care"], desc: "Seasonal hand and foot pampering — premium manicure, pedicure and paraffin care.", until: 60 },
+    ];
+    for (const [i, o] of offers.entries()) {
+      const discounted = Math.round(o.original * (100 - o.percent)) / 100;
+      const offer = await prisma.offer.upsert({
+        where: { slug: slug(o.title) },
+        update: {},
+        create: {
+          title: o.title,
+          slug: slug(o.title),
+          description: o.desc,
+          imageUrl: unsplash(o.image, 900, 1100),
+          originalPrice: new Prisma.Decimal(o.original),
+          discountPercent: o.percent,
+          discountedPrice: new Prisma.Decimal(discounted),
+          validFrom: dateOnly(-7),
+          validUntil: dateOnly(o.until),
+          terms: "Valid on prior booking only. Cannot be combined with other offers.",
+          displayOrder: i,
+        },
+      });
+      await prisma.offerService.createMany({ data: o.items.map((n) => ({ offerId: offer.id, serviceId: serviceIdByName.get(n)! })), skipDuplicates: true });
+    }
+
+    // Gallery
+    const gallery: Array<[string, string, string, Parameters<typeof prisma.galleryImage.create>[0]["data"]["category"], boolean?]> = [
+      ["Traditional Bridal Look", "Bride in red lehenga with traditional gold jewellery", IMG.bride1, "BRIDAL_MAKEUP", true],
+      ["Radiant Bride", "Smiling bride with maang tikka and soft glam makeup", IMG.bride2, "BRIDAL_MAKEUP", true],
+      ["Bridal Portrait", "Bride adjusting her maang tikka in a red lehenga", IMG.bride3, "BRIDAL_MAKEUP"],
+      ["Pink Bridal Glam", "Close-up of bridal eye makeup with nose ring", IMG.bride6, "BRIDAL_MAKEUP", true],
+      ["Classic Red Bride", "Bride in red with floral hair accessories", IMG.bride4, "BRIDAL_MAKEUP"],
+      ["Bridal Detailing", "Bride with kundan jewellery and dewy makeup", IMG.bride7, "BRIDAL_MAKEUP"],
+      ["Silk Saree Styling", "Woman in silk saree with temple jewellery", IMG.saree2, "HAIRSTYLES"],
+      ["Festive Elegance", "Model in purple silk saree with gajra hairstyle", IMG.saree3, "HAIRSTYLES", true],
+      ["Soft Waves", "Stylist creating soft waves with a curling iron", IMG.hairWaves, "HAIRSTYLES"],
+      ["Blow-Dry Bar", "Stylist blow-drying a client's hair", IMG.hairBlowDry, "HAIRSTYLES"],
+      ["Signature Facial", "Client receiving a facial mask application", IMG.facialMask, "FACIAL_TREATMENTS", true],
+      ["Gold Facial Ritual", "Gold facial mask massage treatment", IMG.facialGold, "FACIAL_TREATMENTS"],
+      ["Skin Therapy", "Therapist performing a relaxing facial massage", IMG.facialMassage, "FACIAL_TREATMENTS"],
+      ["Hydrating Treatment", "Client during a hydrating facial treatment", IMG.facialTreatment, "FACIAL_TREATMENTS"],
+      ["Balayage Glow", "Long blonde balayage hair seen from behind", IMG.hairBlonde, "HAIR_TRANSFORMATIONS", true],
+      ["Healthy Lengths", "Woman with long healthy brown hair", IMG.hairLong, "HAIR_TRANSFORMATIONS"],
+      ["Wash & Care", "Client relaxing at the hair wash station", IMG.hairWash2, "HAIR_TRANSFORMATIONS"],
+      ["Curls & Volume", "Stylist adding curls to brunette hair", IMG.hairCurl, "HAIR_TRANSFORMATIONS"],
+      ["Love Nail Art", "Hand-painted red nail art with lettering", IMG.nailsArt, "NAIL_ART", true],
+      ["Pastel Manicure", "Pastel and glitter manicure", IMG.nailsPastel, "NAIL_ART"],
+      ["Dark Florals", "Dark nail art with floral details", IMG.nailsDark, "NAIL_ART"],
+      ["Nude Elegance", "Nude almond-shaped manicure", IMG.nailsNude, "NAIL_ART"],
+      ["Styling Floor", "Bright modern salon interior with styling chairs", IMG.interiorBright, "SALON_INTERIORS", true],
+      ["Mirror Lounge", "Salon interior with round mirrors and black chairs", IMG.interiorMirrors, "SALON_INTERIORS"],
+      ["Makeup Studio", "White makeup studio with a pink salon chair", IMG.interiorWhite, "SALON_INTERIORS"],
+      ["Relaxation Corner", "Tranquil spa corner with plants", IMG.interiorSpa, "SALON_INTERIORS"],
+    ];
+    if ((await prisma.galleryImage.count()) === 0) {
+      await prisma.galleryImage.createMany({
+        data: gallery.map(([title, alt, img, category, insta], i) => ({
+          title,
+          altText: alt,
+          imageUrl: unsplash(img, 1200),
+          category,
+          showOnInstagram: Boolean(insta),
+          displayOrder: i,
+        })),
       });
     }
-  }
-  console.log(`  ✓ ${STAFF.length} staff with services and weekly availability${staffPassword ? " (login enabled)" : ""}`);
+    console.log("  ✓ packages, offers and gallery");
 
-  // Packages
-  const packages = [
-    { name: "Royal Bridal Package", price: 39999, bridal: true, image: IMG.bride2, items: ["Bridal Makeup", "Bridal Hairstyling", "Saree Draping", "Gold Facial", "Premium Manicure"], desc: "Our most-loved bridal experience: signature bridal makeup and hairstyling on the day, draping, plus a gold facial and premium manicure in the days before." },
-    { name: "Pre-Bridal Glow Ritual", price: 8999, bridal: true, image: IMG.mehndi2, items: ["Hydra Facial", "Body Polishing", "Hair Spa", "Eyebrow Shaping"], desc: "A curated pre-wedding ritual to prepare your skin and hair for the big day." },
-    { name: "Facial Combo", price: 3499, bridal: false, image: IMG.facialGold, items: ["Gold Facial", "De-Tan Treatment", "Eyebrow Threading"], desc: "Gold facial with de-tan and brow threading — the perfect monthly refresh." },
-  ];
-  for (const [i, p] of packages.entries()) {
-    const pkg = await prisma.servicePackage.upsert({
-      where: { slug: slug(p.name) },
-      update: {},
-      create: { name: p.name, slug: slug(p.name), description: p.desc, price: new Prisma.Decimal(p.price), imageUrl: unsplash(p.image, 900, 1100), isBridal: p.bridal, displayOrder: i },
-    });
-    await prisma.servicePackageItem.createMany({ data: p.items.map((n) => ({ packageId: pkg.id, serviceId: serviceIdByName.get(n)! })), skipDuplicates: true });
   }
-
-  // Offers
-  const offers = [
-    { title: "Bridal Beauty Package", percent: 15, original: 29998, image: IMG.bride5, items: ["Bridal Makeup", "Bridal Hairstyling"], desc: "Book bridal makeup with bridal hairstyling and save 15% on your wedding-day look.", until: 90 },
-    { title: "Facial Combo Offer", percent: 20, original: 3998, image: IMG.facialTreatment, items: ["Hydra Facial", "Clean-Up"], desc: "Pair our Hydra Facial with a Clean-Up for a deeply refreshed, glowing complexion.", until: 45 },
-    { title: "Hair Spa Package", percent: 25, original: 2098, image: IMG.hairWash, items: ["Hair Spa", "Hair Wash and Blow Dry"], desc: "Restorative hair spa with a luxury wash and blow-dry — weekday favourite.", until: 30 },
-    { title: "Festival Glow Offer", percent: 20, original: 6998, image: IMG.saree1, items: ["Party Makeup", "Saree Draping", "Gold Facial"], desc: "Get festival-ready with party makeup, saree draping and a radiant gold facial.", until: 40 },
-    { title: "Seasonal Pamper Package", percent: 15, original: 3297, image: IMG.nailsPastel, items: ["Premium Manicure", "Pedicure", "Hand and Foot Care"], desc: "Seasonal hand and foot pampering — premium manicure, pedicure and paraffin care.", until: 60 },
-  ];
-  for (const [i, o] of offers.entries()) {
-    const discounted = Math.round(o.original * (100 - o.percent)) / 100;
-    const offer = await prisma.offer.upsert({
-      where: { slug: slug(o.title) },
-      update: {},
-      create: {
-        title: o.title,
-        slug: slug(o.title),
-        description: o.desc,
-        imageUrl: unsplash(o.image, 900, 1100),
-        originalPrice: new Prisma.Decimal(o.original),
-        discountPercent: o.percent,
-        discountedPrice: new Prisma.Decimal(discounted),
-        validFrom: dateOnly(-7),
-        validUntil: dateOnly(o.until),
-        terms: "Valid on prior booking only. Cannot be combined with other offers.",
-        displayOrder: i,
-      },
-    });
-    await prisma.offerService.createMany({ data: o.items.map((n) => ({ offerId: offer.id, serviceId: serviceIdByName.get(n)! })), skipDuplicates: true });
-  }
-
-  // Gallery
-  const gallery: Array<[string, string, string, Parameters<typeof prisma.galleryImage.create>[0]["data"]["category"], boolean?]> = [
-    ["Traditional Bridal Look", "Bride in red lehenga with traditional gold jewellery", IMG.bride1, "BRIDAL_MAKEUP", true],
-    ["Radiant Bride", "Smiling bride with maang tikka and soft glam makeup", IMG.bride2, "BRIDAL_MAKEUP", true],
-    ["Bridal Portrait", "Bride adjusting her maang tikka in a red lehenga", IMG.bride3, "BRIDAL_MAKEUP"],
-    ["Pink Bridal Glam", "Close-up of bridal eye makeup with nose ring", IMG.bride6, "BRIDAL_MAKEUP", true],
-    ["Classic Red Bride", "Bride in red with floral hair accessories", IMG.bride4, "BRIDAL_MAKEUP"],
-    ["Bridal Detailing", "Bride with kundan jewellery and dewy makeup", IMG.bride7, "BRIDAL_MAKEUP"],
-    ["Silk Saree Styling", "Woman in silk saree with temple jewellery", IMG.saree2, "HAIRSTYLES"],
-    ["Festive Elegance", "Model in purple silk saree with gajra hairstyle", IMG.saree3, "HAIRSTYLES", true],
-    ["Soft Waves", "Stylist creating soft waves with a curling iron", IMG.hairWaves, "HAIRSTYLES"],
-    ["Blow-Dry Bar", "Stylist blow-drying a client's hair", IMG.hairBlowDry, "HAIRSTYLES"],
-    ["Signature Facial", "Client receiving a facial mask application", IMG.facialMask, "FACIAL_TREATMENTS", true],
-    ["Gold Facial Ritual", "Gold facial mask massage treatment", IMG.facialGold, "FACIAL_TREATMENTS"],
-    ["Skin Therapy", "Therapist performing a relaxing facial massage", IMG.facialMassage, "FACIAL_TREATMENTS"],
-    ["Hydrating Treatment", "Client during a hydrating facial treatment", IMG.facialTreatment, "FACIAL_TREATMENTS"],
-    ["Balayage Glow", "Long blonde balayage hair seen from behind", IMG.hairBlonde, "HAIR_TRANSFORMATIONS", true],
-    ["Healthy Lengths", "Woman with long healthy brown hair", IMG.hairLong, "HAIR_TRANSFORMATIONS"],
-    ["Wash & Care", "Client relaxing at the hair wash station", IMG.hairWash2, "HAIR_TRANSFORMATIONS"],
-    ["Curls & Volume", "Stylist adding curls to brunette hair", IMG.hairCurl, "HAIR_TRANSFORMATIONS"],
-    ["Love Nail Art", "Hand-painted red nail art with lettering", IMG.nailsArt, "NAIL_ART", true],
-    ["Pastel Manicure", "Pastel and glitter manicure", IMG.nailsPastel, "NAIL_ART"],
-    ["Dark Florals", "Dark nail art with floral details", IMG.nailsDark, "NAIL_ART"],
-    ["Nude Elegance", "Nude almond-shaped manicure", IMG.nailsNude, "NAIL_ART"],
-    ["Styling Floor", "Bright modern salon interior with styling chairs", IMG.interiorBright, "SALON_INTERIORS", true],
-    ["Mirror Lounge", "Salon interior with round mirrors and black chairs", IMG.interiorMirrors, "SALON_INTERIORS"],
-    ["Makeup Studio", "White makeup studio with a pink salon chair", IMG.interiorWhite, "SALON_INTERIORS"],
-    ["Relaxation Corner", "Tranquil spa corner with plants", IMG.interiorSpa, "SALON_INTERIORS"],
-  ];
-  if ((await prisma.galleryImage.count()) === 0) {
-    await prisma.galleryImage.createMany({
-      data: gallery.map(([title, alt, img, category, insta], i) => ({
-        title,
-        altText: alt,
-        imageUrl: unsplash(img, 1200),
-        category,
-        showOnInstagram: Boolean(insta),
-        displayOrder: i,
-      })),
-    });
-  }
-  console.log("  ✓ packages, offers and gallery");
 
   // Demo customers, bookings and reviews
-  if (process.env.SEED_DEMO_DATA !== "false" && !isProd) {
+  if (sampleContent) {
     await seedDemo(serviceIdByName, staffIds);
   }
 
+  if (isProd) {
+    console.warn("");
+    console.warn("  ⚠ PLACEHOLDER salon details were written (address, phone, WhatsApp, email, map).");
+    console.warn("    They appear on the public site and in structured data. Replace them in Admin → Settings before launch.");
+    console.warn("");
+  }
   console.log("🌸 Done.");
 }
 
